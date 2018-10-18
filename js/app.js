@@ -15,7 +15,7 @@ function createScene() {
 
 
     scene.add(new THREE.AxisHelper(10));
-
+    scene.add(new Field(0, 0, 0));
     // object creation
     // addObject( new Table(0, 19, 0),  "table");
 }
@@ -168,7 +168,7 @@ function onKeyDown(e) {
 
 function render() {
     'use strict';
-    
+
     renderer.render(scene, camera);
 }
 
