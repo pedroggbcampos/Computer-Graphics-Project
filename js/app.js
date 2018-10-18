@@ -62,6 +62,14 @@ function createCamera() {
   onResize() // update to the scale once
 }
 
+function createCameraPerspective() {
+  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
+  camera.position.x = 80;
+  camera.position.y = 80;
+  camera.position.z = 80;
+  camera.lookAt(scene.position);
+}
+
 function createCameraFront() {
   camera = new THREE.OrthographicCamera(
   window.innerWidth / - 16, window.innerWidth / 16,
@@ -77,9 +85,9 @@ function createCameraTop() {
   window.innerWidth / - 16, window.innerWidth / 16,
     window.innerHeight / 16, window.innerHeight / - 16,
     -200, 500 );
-    camera.position.x = 0;
+    camera.position.x = 1;
     camera.position.y = 1;
-    camera.position.z = 0;
+    camera.position.z = 1;
     camera.lookAt(scene.position);
 }
 
@@ -137,7 +145,7 @@ function onKeyDown(e) {
               createCameraTop();
               break;
           case "50": // 2
-              createCameraSide();
+              createCameraPerspective();
               break;
           case "51": // 3
               createCameraFront();
