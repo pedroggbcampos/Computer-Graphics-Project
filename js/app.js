@@ -2,6 +2,8 @@
 
 var camera, scene, renderer;
 var num_balls = 5;
+var scaling = 50;
+
 
 var keys_pressed = {}; // stores the keys pressed
 var objects = []; // Objects in the scene
@@ -17,7 +19,12 @@ function createScene() {
 
 
     scene.add(new THREE.AxisHelper(10));
-    scene.add(new Field(0, 0, 0));
+
+    addObject(new LengthWall(scaling/2, 0, 0), "front");
+    addObject(new LengthWall(-scaling/2, 0, 0), "back");
+    addObject(new WidthWall(0, 0, scaling), "left");
+    addObject(new WidthWall(0, 0, -scaling), "right");
+    scene.add(new FieldBase(0, 0, 0));
 
 
     for (var i = 0; i < num_balls; i++) {

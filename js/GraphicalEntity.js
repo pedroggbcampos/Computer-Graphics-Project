@@ -2,7 +2,6 @@
  * In this file, we define the objects
  */
 
-var scaling = 50;
 
 /**
  * Generic Object - basically a decorated THREE.js Object3D
@@ -10,31 +9,64 @@ var scaling = 50;
 class GraphicalEntity extends THREE.Object3D {
   constructor() {
     super()
-
-    // Physics Variables
     this.dof = new THREE.Vector3( 0, 0, 0 ); // facing direction
-    this.velocity = 0//= new THREE.Vector3( 0, 0, 0 );
-    this.acceleration = 0 //= new THREE.Vector3( 0, 0, 0 );
-  }
 
-/**
- * Scales the Velocity by a factor
- */
-  change_velocity(value) {
-    this.velocity += value
-  }
-
-  // accepts value in degrees
-  rotate(value) {
-    this.rotation.y += Math.PI*2*(value/360)
   }
 
   // update function is called to update the object
   update() {  }
+}
 
-  update_dof(){
-    this.dof.x = Math.sin(this.rotation.y)
-    this.dof.z = Math.cos(this.rotation.y)
+
+/**
+ * Object which can be moved around and has to simulate physics
+ */
+class MoveableGraphicalEntity extends GraphicalEntity {
+  constructor() {
+    super()
+
+    // Physics Variables
+    this.velocity = new THREE.Vector3(0, 0, 0);
+    this.acceleration = 0
+
+    // if the object has colided in the last update
+    this.colided = false
+
+    // are the result of the movement with no colision
+    this.tent_pos = new THREE.Vector3(0, 0, 0);
+    this.tent_vel = new THREE.Vector3(0, 0, 0);
+
+    // are the result of the movement with colision
+    this.colide_pos =  new THREE.Vector3(0, 0, 0);
+    this.colide_vel =  new THREE.Vector3(0, 0, 0);
+  }
+
+  /**
+   * Scales the Velocity by a factor
+   */
+    change_velocity(value) {
+      this.velocity += value
+    }
+}
+
+
+
+/**
+* Field Object & related functions
+*/
+class Field extends GraphicalEntity {
+  constructor() {
+    super()
+
+    this.material = new THREE.MeshBasicMaterial({ color: 0xcd853f, wireframe: true });
+    this.name = "Field"
+  }
+}
+
+class FieldWall extends Field {
+  constructor(x, y, z) {
+    super()
+    this.dof(-x, -y, -z) // all walls point to zero
   }
 }
 
@@ -42,19 +74,53 @@ class GraphicalEntity extends THREE.Object3D {
 /**
 * Field Object & related functions
 */
-class Field extends GraphicalEntity {
+class LengthWall extends FieldWall {
+  constructor(x, y, z) {
+    super()
+    var height = Math.sqrt(Math.pow(2*scaling,2)/99);
+    var geometry = new THREE.CubeGeometry(0, height , 2*scaling);
+    var mesh = new THREE.Mesh(geometry, this.material);
+    mesh.position.set(0, 0, 0);
+    this.add(mesh);
+
+    this.position.x = x;
+    this.position.y = y + height/2;
+    this.position.z = z;
+
+    scene.add(this);
+  }
+}
+
+/**
+* Field Object & related functions
+*/
+class WidthWall extends FieldWall {
+  constructor(x, y, z) {
+    super()
+    var height = Math.sqrt(Math.pow(2*scaling,2)/99);
+    var geometry = new THREE.CubeGeometry(scaling, height, 0);
+    var mesh = new THREE.Mesh(geometry, this.material);
+    mesh.position.set(0, 0, 0);
+    this.add(mesh);
+
+    this.position.x = x;
+    this.position.y = y + height/2;
+    this.position.z = z;
+
+    scene.add(this);
+
+  }
+}
+
+
+/**
+* Field Object & related functions
+*/
+class FieldBase extends Field {
   constructor(x, y, z) {
     super()
 
-    this.material = new THREE.MeshBasicMaterial({ color: 0xcd853f, wireframe: true });
-    this.name = "Table"
-
     this.addBase(  0,  0,  0);
-    this.addLengthWall( scaling/2 , 0 , 0);
-    this.addLengthWall( -scaling/2 , 0 , 0);
-    this.addWidthWall( 0 , 0 ,  scaling);
-    this.addWidthWall( 0 , 0 , -scaling);
-    //this.addTableLeg(-25, -10, -8);
     scene.add(this);
 
     this.position.x = x;
@@ -68,30 +134,15 @@ class Field extends GraphicalEntity {
     mesh.position.set(x, y , z);
     this.add(mesh);
   }
-  addLengthWall( x, y, z) {
-    var height = Math.sqrt(Math.pow(2*scaling,2)/99);
-    var geometry = new THREE.CubeGeometry(0, height , 2*scaling);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.set(x, y + height/2, z);
-    this.add(mesh);
-  }
-  addWidthWall( x, y, z) {
-    var height = Math.sqrt(Math.pow(2*scaling,2)/99);
-    var geometry = new THREE.CubeGeometry(scaling, height, 0);
-    var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.set(x, y + height/2 , z);
-    this.add(mesh);
-  }
 }
 
 
 /**
 * Ball Object & related functions
 */
-class Ball extends GraphicalEntity {
+class Ball extends MoveableGraphicalEntity {
   constructor(x, y, z) {
     super()
-    console.log("sdgsdss")
     this.radius = Math.sqrt(Math.pow(2*scaling,2)/99) / 2
     this.material = new THREE.MeshBasicMaterial({ color: 0xcd853f, wireframe: true});
     this.name = "Ball"
