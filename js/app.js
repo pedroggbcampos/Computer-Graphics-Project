@@ -1,10 +1,12 @@
 /*global THREE, requestAnimationFrame, console*/
 
 var camera, scene, renderer;
+var num_balls = 5;
 
 var keys_pressed = {}; // stores the keys pressed
 var objects = []; // Objects in the scene
 var objects_named = {} // object that are named and need to be called
+var balls_in_field = []
 
 var clock = new THREE.Clock();
 
@@ -16,6 +18,12 @@ function createScene() {
 
     scene.add(new THREE.AxisHelper(10));
     scene.add(new Field(0, 0, 0));
+
+
+    for (var i = 0; i < num_balls; i++) {
+      balls_in_field.push( scene.add(new FieldBall(balls_in_field)) );
+
+    }
     // object creation
     // addObject( new Table(0, 19, 0),  "table");
 }
