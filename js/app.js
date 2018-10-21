@@ -221,10 +221,11 @@ function shuffleArray(array) {
 function animate() {
     'use strict';
 
+    var delta = clock.getDelta();
     // Update
     objects.map( function(object) {
       if (typeof object.update === 'function') {
-        object.update();
+        object.update(delta);
         //console.log("updated", object)
       }
     });

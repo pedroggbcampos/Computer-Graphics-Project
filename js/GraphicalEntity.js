@@ -22,7 +22,7 @@ class NonMovableGraphicalEntity extends GraphicalEntity {
   }
 
   // update function is called to update the object
-  update() {  }
+  update(delta) {  }
 }
 
 
@@ -76,8 +76,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   on_colision_nonmoveable(other){  }
 
   // applies the temporary physics variables
-  update() {
-    var delta = clock.getDelta();
+  update(delta) {
     console.log("updating object ", this.uuid)
     console.log(this.velocity)
     console.log(this.dof)
