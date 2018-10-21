@@ -10,6 +10,14 @@ class GraphicalEntity extends THREE.Object3D {
   constructor() {
     super()
     this.dof = new THREE.Vector3( 0, 0, 0 ); // facing direction
+  }
+}
+/**
+ * Generic Object - basically a decorated THREE.js Object3D
+ */
+class NonMovableGraphicalEntity extends GraphicalEntity {
+  constructor() {
+    super()
 
   }
 
@@ -26,27 +34,66 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     super()
 
     // Physics Variables
-    this.velocity = new THREE.Vector3(0, 0, 0);
-    this.acceleration = 0
+    this.dof = new THREE.Vector3(1, 0, 0);
+    this.velocity = 10 //new THREE.Vector3(0, 0, 0);
+    this.acceleration = 2
 
     // if the object has colided in the last update
     this.colided = false
 
     // are the result of the movement with no colision
     this.tent_pos = new THREE.Vector3(0, 0, 0);
-    this.tent_vel = new THREE.Vector3(0, 0, 0);
+    this.tent_vel = 0//new THREE.Vector3(0, 0, 0);
 
     // are the result of the movement with colision
     this.colide_pos =  new THREE.Vector3(0, 0, 0);
-    this.colide_vel =  new THREE.Vector3(0, 0, 0);
+    this.colide_vel =  0//new THREE.Vector3(0, 0, 0);
   }
 
-  /**
-   * Scales the Velocity by a factor
-   */
-    change_velocity(value) {
-      this.velocity += value
+/**
+ * Scales the Velocity by a factor
+ */
+  change_velocity(value) {
+    this.velocity += value
+  }
+
+  // updates physics variables to a temporary variables
+  tentative_update() {  }
+
+  // when the object colides with another
+  on_colision(other) {
+    if (other instanceof MoveableGraphicalEntity) {
+      this.on_colision_moveable(other);
+    } else if (other instanceof NonMovableGraphicalEntity) {
+      this.on_colision_nonmoveable(other);
+    } else {
+      console.log(this, "colided with object with unidentified colision properties");
     }
+  }
+
+  on_colision_moveable(other){  }
+
+  on_colision_nonmoveable(other){  }
+
+  // applies the temporary physics variables
+  update() {
+    var delta = clock.getDelta();
+    console.log("updating object ", this.uuid)
+    console.log(this.velocity)
+    console.log(this.dof)
+    console.log("========================")
+    if (this.velocity>0.05) {
+      this.velocity += this.acceleration*delta
+      this.position.x += this.velocity*delta*this.dof.x
+      this.position.z += this.velocity*delta*this.dof.z
+    } else if (this.velocity<-0.05) {
+      this.velocity += this.acceleration*delta
+      this.position.x += this.velocity*delta*this.dof.x
+      this.position.z += this.velocity*delta*this.dof.z
+    }
+
+
+  }
 }
 
 
@@ -66,7 +113,7 @@ class Field extends GraphicalEntity {
 class FieldWall extends Field {
   constructor(x, y, z) {
     super()
-    this.dof(-x, -y, -z) // all walls point to zero
+    this.dof.set(-x, -y, -z) // all walls point to zero
   }
 }
 
@@ -172,5 +219,7 @@ class FieldBall extends Ball {
     var max_y =  scaling   - this.radius
     this.position.x = randFloat(min_x, max_x)
     this.position.z = randFloat(min_y, max_y)
+    this.dof.x = randFloat(0, 5)
+    this.dof.z = randFloat(0, 5)
   }
 }

@@ -24,15 +24,12 @@ function createScene() {
     addObject(new LengthWall(-scaling/2, 0, 0), "back");
     addObject(new WidthWall(0, 0, scaling), "left");
     addObject(new WidthWall(0, 0, -scaling), "right");
-    scene.add(new FieldBase(0, 0, 0));
+    addObject(new FieldBase(0, 0, 0));
 
 
     for (var i = 0; i < num_balls; i++) {
-      balls_in_field.push( scene.add(new FieldBall(balls_in_field)) );
-
+      balls_in_field.push(addObject(new FieldBall(balls_in_field)));
     }
-    // object creation
-    // addObject( new Table(0, 19, 0),  "table");
 }
 
 
@@ -50,6 +47,8 @@ function addObject(object, name){
     }
   }
   objects.push(object); // add object to the generic array of scene objects
+  console.log("added ", object)
+  return object // returns object such that other function can catch its reference
 }
 
 /**
@@ -213,15 +212,24 @@ function init() {
     window.addEventListener("keyup", onKeyUp);
     window.addEventListener("resize", onResize);
 }
-
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // eslint-disable-line no-param-reassign
+    }
+}
 function animate() {
     'use strict';
 
     // Update
     objects.map( function(object) {
-      if (typeof object.update === 'function') object.update();
+      if (typeof object.update === 'function') {
+        object.update();
+        //console.log("updated", object)
+      }
     });
-
+    //shuffleArray(objects)
+    //console.log("============================")
     // Display
     render();
 
