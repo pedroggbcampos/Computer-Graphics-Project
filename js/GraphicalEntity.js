@@ -10,20 +10,33 @@ class GraphicalEntity extends THREE.Object3D {
   constructor() {
     super()
     this.dof = new THREE.Vector3( 0, 0, 0 ); // facing direction
+    this.boundingbox = {}
   }
+
+  /*colision_detect(other) {
+    console.log("Whoops. Not implemented")
+  }*/
 }
 /**
  * Generic Object - basically a decorated THREE.js Object3D
  */
-class NonMovableGraphicalEntity extends GraphicalEntity {
+class NonMoveableGraphicalEntity extends GraphicalEntity {
   constructor() {
     super()
+    this.boundingbox.type = "plane"
 
   }
 
   // update function is called to update the object
   update(delta) {  }
+
+  // when the object colides with another
+  colision_detect(other) {
+    // wall colides with ball (calls reverse)
+    other.colision_detect_nonmoveable(this)
+  }
 }
+
 
 
 /**
@@ -40,6 +53,10 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
     // if the object has colided in the last update
     this.colided = false
+
+    // colision detection with spheres
+    this.boundingbox.radious = Math.sqrt(Math.pow(2*scaling,2)/99) / 2
+    this.boundingbox.type = "sphere"
 
     // are the result of the movement with no colision
     this.tent_pos = new THREE.Vector3(0, 0, 0);
@@ -60,27 +77,48 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   // updates physics variables to a temporary variables
   tentative_update() {  }
 
-  // when the object colides with another
-  on_colision(other) {
+  colision_detect(other) {
     if (other instanceof MoveableGraphicalEntity) {
-      this.on_colision_moveable(other);
+      // ball colides with ball
+      this.colision_detect_moveable(other);
     } else if (other instanceof NonMovableGraphicalEntity) {
-      this.on_colision_nonmoveable(other);
+      // ball colides with wall
+      this.colision_detect_nonmoveable(other);
     } else {
       console.log(this, "colided with object with unidentified colision properties");
     }
   }
 
-  on_colision_moveable(other){  }
+  colision_detect_moveable(other){
+    // distance between centers of spheres
+    var dist = this.position.distanceTo(other.position).length
 
-  on_colision_nonmoveable(other){  }
+    // TODO not tested
+    if (dist < this.boundingbox_radious + other.boundingbox_radious) {
+      this.on_colision_moveable(other);
+    }
+  }
+
+  on_colision_moveable(other){
+    console.log("on_colision_moveable not implmented yet")
+  }
+
+  // we assume that if it is coliding with a non movable object
+  colision_detect_nonmoveable(other){
+    // gives the distance to the wall along the axis that the wall is facing
+    var dist = Math.abs(other.position.dot(other.dof) - this.position.dof())
+    if (dist < this.boundingbox_radious) {
+      console.log("colision!")
+    }
+  }
+
+
+  on_colision_nonmoveable(other){
+
+  }
 
   // applies the temporary physics variables
   update(delta) {
-    console.log("updating object ", this.uuid)
-    console.log(this.velocity)
-    console.log(this.dof)
-    console.log("========================")
     if (this.velocity>0.05) {
       this.velocity += this.acceleration*delta
       this.position.x += this.velocity*delta*this.dof.x
@@ -90,8 +128,6 @@ class MoveableGraphicalEntity extends GraphicalEntity {
       this.position.x += this.velocity*delta*this.dof.x
       this.position.z += this.velocity*delta*this.dof.z
     }
-
-
   }
 }
 
@@ -100,7 +136,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 /**
 * Field Object & related functions
 */
-class Field extends GraphicalEntity {
+class Field extends NonMoveableGraphicalEntity {
   constructor() {
     super()
 
@@ -109,7 +145,7 @@ class Field extends GraphicalEntity {
   }
 }
 
-class FieldWall extends Field {
+class FieldWall extends NonMoveableGraphicalEntity {
   constructor(x, y, z) {
     super()
     this.dof.set(-x, -y, -z) // all walls point to zero

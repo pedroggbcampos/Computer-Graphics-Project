@@ -26,9 +26,11 @@ function createScene() {
     addObject(new WidthWall(0, 0, -scaling), "right");
     addObject(new FieldBase(0, 0, 0));
 
-
     for (var i = 0; i < num_balls; i++) {
       balls_in_field.push(addObject(new FieldBall(balls_in_field)));
+    }
+    for (var i = 0; i < num_balls; i++) {
+      console.log(balls_in_field[i].type)
     }
 }
 
@@ -212,26 +214,31 @@ function init() {
     window.addEventListener("keyup", onKeyUp);
     window.addEventListener("resize", onResize);
 }
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]]; // eslint-disable-line no-param-reassign
-    }
-}
+
 function animate() {
     'use strict';
 
     var delta = clock.getDelta();
-    // Update
+
+    // Tentative Update
     objects.map( function(object) {
       if (typeof object.update === 'function') {
         object.update(delta);
-        //console.log("updated", object)
+        //object.tentativeUpdate(delta);
       }
     });
-    //shuffleArray(objects)
-    //console.log("============================")
-    // Display
+
+    objs_colision_detection(objects)
+
+    // Tentative Update
+    /*objects.map( function(object) {
+      if (typeof object.update === 'function') {
+        object.update(delta);
+        //object.tentativeUpdate(delta);
+      }
+    });*/
+
+
     render();
 
     requestAnimationFrame(animate);
