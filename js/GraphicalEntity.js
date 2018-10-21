@@ -117,7 +117,10 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
     //console.log(dist, " < ", this.boundingbox.radious)
     if (dist < this.boundingbox.radious) {
-
+      var tmp_dof = new THREE.Vector3()
+      tmp_dof.copy(other.dof)
+      tmp_dof.multiplyScalar(-1) // invertes it
+      this.dof.multiplyVectors(this.dof, tmp_dof)
       console.log("colision!")
     }
   }
