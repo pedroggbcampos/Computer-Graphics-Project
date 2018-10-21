@@ -7,6 +7,7 @@ var scaling = 50;
 
 var keys_pressed = {}; // stores the keys pressed
 var objects = []; // Objects in the scene
+var objects_colidable = []; // Objects in the scene that are colidable
 var objects_named = {} // object that are named and need to be called
 var balls_in_field = []
 
@@ -24,13 +25,10 @@ function createScene() {
     addObject(new LengthWall(-scaling/2, 0, 0), "back");
     addObject(new WidthWall(0, 0, scaling), "left");
     addObject(new WidthWall(0, 0, -scaling), "right");
-    addObject(new FieldBase(0, 0, 0));
-
+    addObject(new FieldBase(0, 0, 0), "base", false)
     for (var i = 0; i < num_balls; i++) {
       balls_in_field.push(addObject(new FieldBall(balls_in_field)));
-    }
-    for (var i = 0; i < num_balls; i++) {
-      console.log(balls_in_field[i].type)
+      console.log(objects_colidable)
     }
 }
 
@@ -40,7 +38,7 @@ function createScene() {
  * @param {EntidadeGrafica} object - The Object add with "new ObjectName(params)"
  * @param {string} name - (Optional) Name for referencing the object
  */
-function addObject(object, name){
+function addObject(object, name, colidable){
   if (typeof name !== "undefined"){ //if it is a named object
     if (objects_named[name] === "undefined") {
       console.log("give the object another name")
@@ -48,8 +46,10 @@ function addObject(object, name){
       objects_named[name]=object;
     }
   }
+  if (typeof colidable == "undefined" || colidable) {
+    objects_colidable.push(object)
+  }
   objects.push(object); // add object to the generic array of scene objects
-  console.log("added ", object)
   return object // returns object such that other function can catch its reference
 }
 
@@ -228,7 +228,7 @@ function animate() {
       }
     });
 
-    objs_colision_detection(objects)
+    objs_colision_detection(objects_colidable)
 
     // Tentative Update
     /*objects.map( function(object) {

@@ -33,7 +33,11 @@ class NonMoveableGraphicalEntity extends GraphicalEntity {
   // when the object colides with another
   colision_detect(other) {
     // wall colides with ball (calls reverse)
-    other.colision_detect_nonmoveable(this)
+    if (other instanceof MoveableGraphicalEntity) {
+      // ball colides with wall
+      other.colision_detect_nonmoveable(this);
+    }
+    // otherwise it is NonMovable with NonMovable which does nothing
   }
 }
 
@@ -91,10 +95,10 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
   colision_detect_moveable(other){
     // distance between centers of spheres
-    var dist = this.position.distanceTo(other.position).length
+    var dist = this.position.distanceTo(other.position)
 
     // TODO not tested
-    if (dist < this.boundingbox_radious + other.boundingbox_radious) {
+    if (dist < this.boundingbox.radious + other.boundingbox.radious) {
       this.on_colision_moveable(other);
     }
   }
@@ -105,9 +109,15 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
   // we assume that if it is coliding with a non movable object
   colision_detect_nonmoveable(other){
+    console.log("detecting colision")
     // gives the distance to the wall along the axis that the wall is facing
-    var dist = Math.abs(other.position.dot(other.dof) - this.position.dof())
-    if (dist < this.boundingbox_radious) {
+    //console.log(other.dof)
+    var dist = Math.abs(other.position.dot(other.dof) - this.position.dot(other.dof))
+    //console.log(dist)
+
+    //console.log(dist, " < ", this.boundingbox.radious)
+    if (dist < this.boundingbox.radious) {
+
       console.log("colision!")
     }
   }
@@ -148,7 +158,7 @@ class Field extends NonMoveableGraphicalEntity {
 class FieldWall extends NonMoveableGraphicalEntity {
   constructor(x, y, z) {
     super()
-    this.dof.set(-x, -y, -z) // all walls point to zero
+    this.dof.set(-x, -y, -z).normalize() // all walls point to zero
   }
 }
 
