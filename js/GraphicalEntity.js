@@ -79,7 +79,23 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   }
 
   // updates physics variables to a temporary variables
-  tentative_update() {  }
+  tentative_update(delta) {
+  	// remembers current position and velocity
+  	this.colide_pos.x = this.position.x
+  	this.colide_pos.y = this.position.y
+  	this.colide_vel.x = this.velocity.x
+  	this.colide_vel.y = this.velocity.y
+  	// updates the tentative variables to the next position and velocity
+  	if (this.velocity>0.05) {
+      this.tent_vel += this.acceleration*delta
+      this.tent_pos.x += this.velocity*delta*this.dof.x
+      this.tent_pos.z += this.velocity*delta*this.dof.z
+    } else if (this.velocity<-0.05) {
+      this.tent_vel += this.acceleration*delta
+      this.tent_pos.x += this.velocity*delta*this.dof.x
+      this.tent_pos.z += this.velocity*delta*this.dof.z
+    }
+  }
 
   colision_detect(other) {
     if (other instanceof MoveableGraphicalEntity) {
@@ -131,6 +147,8 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   }
 
   // applies the temporary physics variables
+
+
   update(delta) {
     if (this.velocity>0.05) {
       this.velocity += this.acceleration*delta
