@@ -228,7 +228,7 @@ function animate() {
       }
     });
 
-    objs_colision_detection(objects_colidable)
+    //objs_colision_detection(objects_colidable)
 
     // Tentative Update
     /*objects.map( function(object) {

@@ -267,7 +267,7 @@ class FieldBall extends Ball {
     var max_y =  scaling   - this.radius
     this.position.x = randFloat(min_x, max_x)
     this.position.z = randFloat(min_y, max_y)
-    this.dof.x = randFloat(0, 5)
-    this.dof.z = randFloat(0, 5)
+    this.dof.x = randFloat(-5, 5)
+    this.dof.z = randFloat(-5, 5)
   }
 }
