@@ -111,7 +111,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
   colision_detect_moveable(other){
     // distance between centers of spheres
-    var dist = this.position.distanceTo(other.position)
+    var dist = this.tent_pos.distanceTo(other.tent_pos)
 
     // TODO not tested
     if (dist < this.boundingbox.radious + other.boundingbox.radious) {
@@ -128,22 +128,32 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     console.log("detecting colision")
     // gives the distance to the wall along the axis that the wall is facing
     //console.log(other.dof)
-    var dist = Math.abs(other.position.dot(other.dof) - this.position.dot(other.dof))
+    var dist = Math.abs(other.position.dot(other.dof) - this.tent_pos.dot(other.dof))
     //console.log(dist)
 
     //console.log(dist, " < ", this.boundingbox.radious)
+    console.log(typeof(this))
     if (dist < this.boundingbox.radious) {
-      var tmp_dof = new THREE.Vector3()
-      tmp_dof.copy(other.dof)
-      tmp_dof.multiplyScalar(-1) // invertes it
-      this.dof.multiplyVectors(this.dof, tmp_dof)
-      console.log("colision!")
+      this.on_colision_nonmoveable(other)
+    
     }
+
   }
 
 
   on_colision_nonmoveable(other){
-
+  	console.log(other.dof)
+  	/*
+  	var tmp_dof = new THREE.Vector3()
+    console.log(other.dof)
+    tmp_dof.copy(other.dof)
+    console.log(this.tmp_dof)
+    tmp_dof.multiplyScalar(-1) // invertes it
+    this.dof.multiplyVectors(this.dof, tmp_dof)
+    console.log(this.tmp_dof)
+    console.log(this.dof)
+    console.log("colision!")
+    */
   }
 
   // applies the temporary physics variables
@@ -179,6 +189,7 @@ class Field extends NonMoveableGraphicalEntity {
 class FieldWall extends NonMoveableGraphicalEntity {
   constructor(x, y, z) {
     super()
+    console.log(x, y, z)
     this.dof.set(-x, -y, -z).normalize() // all walls point to zero
   }
 }
@@ -288,4 +299,5 @@ class FieldBall extends Ball {
     this.dof.x = randFloat(-5, 5)
     this.dof.z = randFloat(-5, 5)
   }
+
 }

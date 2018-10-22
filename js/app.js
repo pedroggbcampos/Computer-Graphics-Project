@@ -25,7 +25,7 @@ function createScene() {
     addObject(new LengthWall(-scaling/2, 0, 0), "back");
     addObject(new WidthWall(0, 0, scaling), "left");
     addObject(new WidthWall(0, 0, -scaling), "right");
-    addObject(new FieldBase(0, 0, 0), "base", false)
+    addObject(new FieldBase(0, 0, 0), "base", false);
     for (var i = 0; i < num_balls; i++) {
       balls_in_field.push(addObject(new FieldBall(balls_in_field)));
       console.log(objects_colidable)
@@ -225,12 +225,15 @@ function animate() {
     	if (typeof object.tentativeUpdate === 'function') {
         	object.tentativeUpdate(delta);
     	}
+    })
+    
+    objs_colision_detection(objects_colidable)
+
+    objects.map( function(object) {
     	if (typeof object.update === 'function') {
         	object.update(delta);
     	}
     });
-
-    //objs_colision_detection(objects_colidable)
 
     // Tentative Update
     /*objects.map( function(object) {
