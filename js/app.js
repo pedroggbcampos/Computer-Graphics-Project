@@ -222,11 +222,11 @@ function animate() {
 
     // Tentative Update
     objects.map( function(object) {
-      if (typeof object.update === 'function') {
-        object.update(delta);
+    	if (typeof object.tentativeUpdate === 'function') {
+        	object.tentativeUpdate(delta);
     	}
-      if (typeof object.tentativeUpdate === 'function') {
-        object.tentativeUpdate(delta);
+    	if (typeof object.update === 'function') {
+        	object.update(delta);
     	}
     });
 
