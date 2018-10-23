@@ -124,7 +124,7 @@ function onResize() {
 
   var w = window.innerWidth;
   var h = window.innerHeight;
-  var viewSize =  60 * (1 / h + 1 / w);
+  var viewSize =  80 * (1 / h + 1 / w);
   camera.left = w / - 2 * viewSize;
   camera.right = w / 2 * viewSize;
   camera.top = h / 2 * viewSize;
@@ -223,10 +223,11 @@ function animate() {
     // Tentative Update
     objects.map( function(object) {
     	if (typeof object.tentativeUpdate === 'function') {
+        console.log("attempting tentative")
         	object.tentativeUpdate(delta);
     	}
     })
-    
+
     objs_colision_detection(objects_colidable)
 
     objects.map( function(object) {

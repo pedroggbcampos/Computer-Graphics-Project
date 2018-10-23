@@ -51,7 +51,6 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     super()
 
     // Physics Variables
-    this.dof = new THREE.Vector3(1, 0, 0);
     this.velocity = 10 //new THREE.Vector3(0, 0, 0);
     this.acceleration = 2
 
@@ -79,12 +78,13 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   }
 
   // updates physics variables to a temporary variables
-  tentative_update(delta) {
+  tentativeUpdate (delta) {
   	// remembers current position and velocity
   	this.colide_pos.x = this.position.x
   	this.colide_pos.y = this.position.y
-  	this.colide_vel.x = this.velocity.x
-  	this.colide_vel.y = this.velocity.y
+  	//this.colide_vel.x = this.velocity.x
+  	//this.colide_vel.y = this.velocity.y
+    console.log(this.colide_pos)
   	// updates the tentative variables to the next position and velocity
   	if (this.velocity>0.05) {
       this.tent_vel += this.acceleration*delta
@@ -95,6 +95,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
       this.tent_pos.x += this.velocity*delta*this.dof.x
       this.tent_pos.z += this.velocity*delta*this.dof.z
     }
+    console.log(this.tent_pos)
   }
 
   colision_detect(other) {
@@ -120,30 +121,39 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   }
 
   on_colision_moveable(other){
-    console.log("on_colision_moveable not implmented yet")
+    console.log("resolved colision between balls")
+    this.position.x = this.colide_pos.x
+  	this.position.y = this.colide_pos.y
+    other.position.x = other.colide_pos.x
+    other.position.y = other.colide_pos.y
+    var tmp_velocity = this.velocity
+    this.velocity = - other.velocity
+    other.velocity = - tmp_velocity
+
   }
 
   // we assume that if it is coliding with a non movable object
   colision_detect_nonmoveable(other){
-    console.log("detecting colision")
+    console.log("detecting colision with wall")
     // gives the distance to the wall along the axis that the wall is facing
-    //console.log(other.dof)
     var dist = Math.abs(other.position.dot(other.dof) - this.tent_pos.dot(other.dof))
-    //console.log(dist)
+    console.log()
+    console.log(other.dof)
 
-    //console.log(dist, " < ", this.boundingbox.radious)
-    console.log(typeof(this))
+    console.log(dist, " < ", this.boundingbox.radious)
+    //console.log(typeof(this))
     if (dist < this.boundingbox.radious) {
       this.on_colision_nonmoveable(other)
-    
+
     }
 
   }
 
 
   on_colision_nonmoveable(other){
-  	console.log(other.dof)
-  	/*
+    console.log("resolved colision with wall")
+    this.position.x = this.colide_pos.x
+  	this.position.y = this.colide_pos.y
   	var tmp_dof = new THREE.Vector3()
     console.log(other.dof)
     tmp_dof.copy(other.dof)
@@ -153,11 +163,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     console.log(this.tmp_dof)
     console.log(this.dof)
     console.log("colision!")
-    */
   }
-
-  // applies the temporary physics variables
-
 
   update(delta) {
     if (this.velocity>0.05) {
@@ -189,8 +195,8 @@ class Field extends NonMoveableGraphicalEntity {
 class FieldWall extends NonMoveableGraphicalEntity {
   constructor(x, y, z) {
     super()
-    console.log(x, y, z)
     this.dof.set(-x, -y, -z).normalize() // all walls point to zero
+    console.log(this.dof)
   }
 }
 
@@ -200,11 +206,10 @@ class FieldWall extends NonMoveableGraphicalEntity {
 */
 class LengthWall extends FieldWall {
   constructor(x, y, z) {
-    super()
+    super(x, y, z)
     var height = Math.sqrt(Math.pow(2*scaling,2)/99);
     var geometry = new THREE.CubeGeometry(0, height , 2*scaling);
     var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.set(0, 0, 0);
     this.add(mesh);
 
     this.position.x = x;
@@ -220,11 +225,10 @@ class LengthWall extends FieldWall {
 */
 class WidthWall extends FieldWall {
   constructor(x, y, z) {
-    super()
+    super(x, y, z)
     var height = Math.sqrt(Math.pow(2*scaling,2)/99);
     var geometry = new THREE.CubeGeometry(scaling, height, 0);
     var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.set(0, 0, 0);
     this.add(mesh);
 
     this.position.x = x;
