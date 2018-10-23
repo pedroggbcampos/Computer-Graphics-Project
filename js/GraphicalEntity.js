@@ -121,7 +121,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   }
 
   on_colision_moveable(other){
-    console.log("resolved colision between balls")
+    /*console.log("resolved colision between balls")
     this.position.x = this.colide_pos.x
   	this.position.y = this.colide_pos.y
     other.position.x = other.colide_pos.x
@@ -129,7 +129,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     var tmp_velocity = this.velocity
     this.velocity = - other.velocity
     other.velocity = - tmp_velocity
-
+    */
   }
 
   // we assume that if it is coliding with a non movable object
@@ -151,6 +151,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
 
   on_colision_nonmoveable(other){
+    /*
     console.log("resolved colision with wall")
     this.position.x = this.colide_pos.x
   	this.position.y = this.colide_pos.y
@@ -163,6 +164,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     console.log(this.tmp_dof)
     console.log(this.dof)
     console.log("colision!")
+    */
   }
 
   update(delta) {
