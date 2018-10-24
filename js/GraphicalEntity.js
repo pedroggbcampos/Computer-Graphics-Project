@@ -103,7 +103,8 @@ class MoveableGraphicalEntity extends GraphicalEntity {
          console.log(this.dof.x, this.dof.z)
          camera.lookAt(new THREE.Vector3(this.dof.x, 9.3, this.dof.z));
        }
-       this.position.set(this.colide_pos.x, 0, this.colide_pos.z)
+       this.position.x = this.colide_pos.x
+       this.position.z = this.colide_pos.z
        //console.log("updating with colided ", this.position)
        this.velocity = this.colide_vel
      } else {
@@ -114,8 +115,10 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
        this.velocity = this.tent_vel
      }
-
      this.colided = false
+     //this.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), this.dof.x/30)
+     //this.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), this.dof.z/30)
+
    }
 
   colision_detect(other) {
@@ -296,13 +299,16 @@ class Ball extends MoveableGraphicalEntity {
 
     var geometry = new THREE.SphereGeometry(this.radius);
     var mesh = new THREE.Mesh(geometry, this.material);
-    mesh.position.set(x, y + this.radius, z);
+    mesh.position.set(x, y, z);
     this.add(mesh);
-
-    scene.add(this);
     this.position.x = x;
     this.position.y = y;
     this.position.z = z;
+    this.axis = new THREE.AxisHelper(12)
+    //this.axis.visible = !this.axis.visible;
+    this.add(this.axis);
+
+    scene.add(this);
   }
 }
 
@@ -317,12 +323,10 @@ class FieldBall extends Ball {
     var min_y = -scaling   + this.radius
     var max_y =  scaling   - this.radius
     this.position.x = randFloat(min_x, max_x)
+    this.position.y += this.radius
     this.position.z = randFloat(min_y, max_y)
     this.dof.x = randFloat(-5, 5)
     this.dof.z = randFloat(-5, 5)
-    this.axis = new THREE.AxisHelper(12)
-    this.axis.visible = !this.axis.visible;
-    this.add(this.axis);
   }
 
 }
