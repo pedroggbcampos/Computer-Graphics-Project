@@ -1,10 +1,11 @@
 /*global THREE, requestAnimationFrame, console*/
 
 var camera, scene, renderer;
-var num_balls = 1;
+var num_balls = 2;
 var scaling = 50;
 var delta = 1;
 var pause = false;
+var ball_cam = false; // changes to true when user is watching ball camera
 
 
 var keys_pressed = {}; // stores the keys pressed
@@ -31,6 +32,7 @@ function createScene() {
     for (var i = 0; i < num_balls; i++) {
       balls_in_field.push(addObject(new FieldBall(balls_in_field)));
       console.log(objects_colidable)
+
     }
 }
 
@@ -86,6 +88,14 @@ function createCameraPerspective() {
   camera.position.y = 80;
   camera.position.z = 80;
   camera.lookAt(scene.position);
+}
+
+function createCameraPerspectiveBall() {
+  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
+  var ball = balls_in_field[0]
+  ball.add(camera)
+  camera.position.y = camera.position.y + ball.radius*2 + 0.1
+  camera.lookAt(ball.dof.x, -1 ,ball.dof.z);
 }
 
 function createCameraFront() {
@@ -160,27 +170,31 @@ function onKeyDown(e) {
           case "40": // down
               break;
           case "49": // 1
+              ball_cam = false;
               createCameraTop();
               break;
           case "50": // 2
+              ball_cam = false;
               createCameraPerspective();
               break;
           case "51": // 3
-              createCameraFront();
+              ball_cam = true;
+              createCameraPerspectiveBall();
               break;
           case "52": // 4
+              ball_cam = false;
+              createCameraFront();
               break;
           case "65": //A
               // assuming all submeshes inherit material from parent object
               for (var object in objects)
                 // TODO add possibility for objects to have different materials
                 objects[object].material.wireframe = !objects[object].material.wireframe;
-              break
-          case "83":  //S
-              scene.traverse(function (node) {
-                if (node instanceof THREE.AxisHelper)
-                  node.visible = !node.visible;
-              });
+              break;
+          case "69": //E
+              //shows or hides the axis to each ball in the Field
+              for (var ball in balls_in_field)
+                balls_in_field[ball].axis.visible = !balls_in_field[ball].axis.visible;
               break;
           case "80": //P - pauses the game
               pause = !pause;

@@ -98,6 +98,11 @@ class MoveableGraphicalEntity extends GraphicalEntity {
      //console.log(this.colided)
      if (this.colided == true) {
        this.dof = this.colide_dof
+       //changes the direction in which the camera is pointing to the direction in which the ball is moving
+       if(this === balls_in_field[0] && ball_cam){
+         camera.lookAt(this.dof.x, -1, this.dof.z);
+         console.log(this.dof)
+       }
        this.position.set(this.colide_pos.x, 0, this.colide_pos.z)
        //console.log("updating with colided ", this.position)
        this.velocity = this.colide_vel
@@ -181,7 +186,6 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     reflextion_vector.sub(normal.multiplyScalar(2*incidence_vector.dot(other.normal)))
     //console.log("original: ", incidence_vector , " refletected: ", reflextion_vector)
     this.colide_dof = reflextion_vector
-
     this.colide_pos.x = this.position.x + this.velocity*delta*this.colide_dof.x
     this.colide_pos.z = this.position.z + this.velocity*delta*this.colide_dof.z
     //console.log("(with collision) ", this.position, ">", this.tent_pos)
@@ -316,6 +320,9 @@ class FieldBall extends Ball {
     this.position.z = randFloat(min_y, max_y)
     this.dof.x = randFloat(-5, 5)
     this.dof.z = randFloat(-5, 5)
+    this.axis = new THREE.AxisHelper(12)
+    this.axis.visible = !this.axis.visible;
+    this.add(this.axis);
   }
 
 }
