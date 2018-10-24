@@ -98,10 +98,10 @@ class MoveableGraphicalEntity extends GraphicalEntity {
      //console.log(this.colided)
      if (this.colided == true) {
        this.dof = this.colide_dof
-       //changes the direction in which the camera is pointing to the direction in which the ball is moving
-       if(this === balls_in_field[0] && ball_cam){
-         camera.lookAt(this.dof.x, -1, this.dof.z);
-         console.log(this.dof)
+       if(this === balls_in_field[0] && ball_cam){ //if true it means the ball with the camera collided
+         //changes the direction in which the camera is pointing to the direction in which the ball is moving
+         console.log(this.dof.x, this.dof.z)
+         camera.lookAt(new THREE.Vector3(this.dof.x, 9.3, this.dof.z));
        }
        this.position.set(this.colide_pos.x, 0, this.colide_pos.z)
        //console.log("updating with colided ", this.position)

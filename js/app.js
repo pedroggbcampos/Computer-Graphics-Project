@@ -95,7 +95,7 @@ function createCameraPerspectiveBall() {
   var ball = balls_in_field[0]
   ball.add(camera)
   camera.position.y = camera.position.y + ball.radius*2 + 0.1
-  camera.lookAt(ball.dof.x, -1 ,ball.dof.z);
+  camera.lookAt(new THREE.Vector3(ball.dof.x, 9.3 ,ball.dof.z));
 }
 
 function createCameraFront() {
