@@ -205,7 +205,7 @@ class Field extends NonMoveableGraphicalEntity {
   }
 }
 
-class FieldWall extends NonMoveableGraphicalEntity {
+class FieldWall extends Field {
   constructor(x, y, z) {
     super()
     this.normal.set(-x, 0, -z).normalize() // all walls point to zero
@@ -220,6 +220,7 @@ class LengthWall extends FieldWall {
   constructor(x, y, z) {
     super(x, y, z)
     this.name = "LengthWall"
+    console.log(this.material)
     var height = Math.sqrt(Math.pow(2*scaling,2)/99);
     var geometry = new THREE.CubeGeometry(0, height , 2*scaling);
     var mesh = new THREE.Mesh(geometry, this.material);
