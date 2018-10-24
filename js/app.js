@@ -1,8 +1,10 @@
 /*global THREE, requestAnimationFrame, console*/
 
 var camera, scene, renderer;
-var num_balls = 5;
+var num_balls = 1;
 var scaling = 50;
+var delta = 1;
+var pause = false;
 
 
 var keys_pressed = {}; // stores the keys pressed
@@ -180,10 +182,8 @@ function onKeyDown(e) {
                   node.visible = !node.visible;
               });
               break;
-          case "115": //s
-              break;
-          case "69":  //E
-          case "101": //e
+          case "80": //P - pauses the game
+              pause = !pause;
               break;
       }
     }
@@ -218,32 +218,26 @@ function init() {
 function animate() {
     'use strict';
 
-    var delta = clock.getDelta();
+    delta = clock.getDelta();
+    if (!pause) {
 
-    // Tentative Update
-    objects.map( function(object) {
-    	if (typeof object.tentativeUpdate === 'function') {
-        console.log("attempting tentative")
-        	object.tentativeUpdate(delta);
-    	}
-    })
+      // Tentative Update
+      objects.map( function(object) {
+        if (typeof object.tentativeUpdate === 'function') {
+          object.tentativeUpdate(delta);
+        }
+      })
 
-    objs_colision_detection(objects_colidable)
+      // colision update
+      objs_colision_detection(objects_colidable)
 
-    objects.map( function(object) {
-    	if (typeof object.update === 'function') {
-        	object.update(delta);
-    	}
-    });
-
-    // Tentative Update
-    /*objects.map( function(object) {
-      if (typeof object.update === 'function') {
-        object.update(delta);
-        //object.tentativeUpdate(delta);
-      }
-    });*/
-
+      // Update
+      objects_colidable.map( function(object) {
+        if (typeof object.update === 'function') {
+          object.update(delta);
+        }
+      });
+    }
 
     render();
 

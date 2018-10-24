@@ -9,7 +9,7 @@
 class GraphicalEntity extends THREE.Object3D {
   constructor() {
     super()
-    this.dof = new THREE.Vector3( 0, 0, 0 ); // facing direction
+    this.dof = new THREE.Vector3( 1, 0, 0 ); // facing direction
     this.boundingbox = {}
   }
 
@@ -24,6 +24,7 @@ class NonMoveableGraphicalEntity extends GraphicalEntity {
   constructor() {
     super()
     this.boundingbox.type = "plane"
+    this.normal = new THREE.Vector3
 
   }
 
@@ -63,11 +64,13 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
     // are the result of the movement with no colision
     this.tent_pos = new THREE.Vector3(0, 0, 0);
-    this.tent_vel = 0//new THREE.Vector3(0, 0, 0);
+    this.tent_dof = new THREE.Vector3(0, 0, 0);
+    this.tent_vel = 10
 
     // are the result of the movement with colision
     this.colide_pos =  new THREE.Vector3(0, 0, 0);
-    this.colide_vel =  0//new THREE.Vector3(0, 0, 0);
+    this.colide_dof =  new THREE.Vector3(0, 0, 0);
+    this.colide_vel =  10
   }
 
 /**
@@ -79,32 +82,43 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
   // updates physics variables to a temporary variables
   tentativeUpdate (delta) {
-  	// remembers current position and velocity
-  	this.colide_pos.x = this.position.x
-  	this.colide_pos.y = this.position.y
-  	//this.colide_vel.x = this.velocity.x
-  	//this.colide_vel.y = this.velocity.y
-    console.log(this.colide_pos)
-  	// updates the tentative variables to the next position and velocity
-  	if (this.velocity>0.05) {
-      this.tent_vel += this.acceleration*delta
-      this.tent_pos.x += this.velocity*delta*this.dof.x
-      this.tent_pos.z += this.velocity*delta*this.dof.z
-    } else if (this.velocity<-0.05) {
-      this.tent_vel += this.acceleration*delta
-      this.tent_pos.x += this.velocity*delta*this.dof.x
-      this.tent_pos.z += this.velocity*delta*this.dof.z
-    }
-    console.log(this.tent_pos)
+	   // updates the tentative variables to the next position and velocity
+    //this.tent_vel = this.acceleration*delta
+    this.tent_pos.x = this.position.x + this.velocity*delta*this.dof.x
+    this.tent_pos.z = this.position.z + this.velocity*delta*this.dof.z
+    this.tent_dof = this.dof
   }
 
+  /**
+   * simply applies the valies of pos, dof and vel calculated,
+   * depending on wether or not it had a colision
+   */
+   update() {
+     //console.log(this.position," -> ", this.tent_pos)
+     //console.log(this.colided)
+     if (this.colided == true) {
+       this.dof = this.colide_dof
+       this.position.set(this.colide_pos.x, 0, this.colide_pos.z)
+       //console.log("updating with colided ", this.position)
+       this.velocity = this.colide_vel
+     } else {
+       this.dof = this.tent_dof
+
+       this.position.x = this.tent_pos.x
+       this.position.z = this.tent_pos.z
+
+       this.velocity = this.tent_vel
+     }
+
+     this.colided = false
+   }
+
   colision_detect(other) {
+    // console.log("> detecting colision")
     if (other instanceof MoveableGraphicalEntity) {
-      // ball colides with ball
-      this.colision_detect_moveable(other);
+      this.colision_detect_moveable(other); // ball colides with ball
     } else if (other instanceof NonMovableGraphicalEntity) {
-      // ball colides with wall
-      this.colision_detect_nonmoveable(other);
+      this.colision_detect_nonmoveable(other); // ball colides with wall
     } else {
       console.log(this, "colided with object with unidentified colision properties");
     }
@@ -116,6 +130,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
     // TODO not tested
     if (dist < this.boundingbox.radious + other.boundingbox.radious) {
+      this.colided = true
       this.on_colision_moveable(other);
     }
   }
@@ -134,50 +149,46 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
   // we assume that if it is coliding with a non movable object
   colision_detect_nonmoveable(other){
-    console.log("detecting colision with wall")
     // gives the distance to the wall along the axis that the wall is facing
-    var dist = Math.abs(other.position.dot(other.dof) - this.tent_pos.dot(other.dof))
-    console.log()
-    console.log(other.dof)
 
-    console.log(dist, " < ", this.boundingbox.radious)
-    //console.log(typeof(this))
+    // masking out normal coordinate to obtain de distance to the plane
+
+    // vect_non_movalbe_movabe = other.position - this.position
+    var dist_vect = this.position.clone()
+    dist_vect.sub(other.position)
+
+    var dist = dist_vect.dot(other.normal)
+
     if (dist < this.boundingbox.radious) {
+      this.colided = true
       this.on_colision_nonmoveable(other)
-
     }
-
   }
 
-
+ /**
+  *
+  */
   on_colision_nonmoveable(other){
-    /*
-    console.log("resolved colision with wall")
-    this.position.x = this.colide_pos.x
-  	this.position.y = this.colide_pos.y
-  	var tmp_dof = new THREE.Vector3()
-    console.log(other.dof)
-    tmp_dof.copy(other.dof)
-    console.log(this.tmp_dof)
-    tmp_dof.multiplyScalar(-1) // invertes it
-    this.dof.multiplyVectors(this.dof, tmp_dof)
-    console.log(this.tmp_dof)
-    console.log(this.dof)
-    console.log("colision!")
-    */
+    /**
+     * BUG when the ball is too deep into the wall when the detection is called
+     */
+    // reflection_vector = dof−2(dof⋅normal)normal
+    //console.log("colided with wall", other.normal)
+    var incidence_vector = this.dof.clone()
+
+    var reflextion_vector = incidence_vector.clone()
+    var normal = other.normal.clone()
+    reflextion_vector.sub(normal.multiplyScalar(2*incidence_vector.dot(other.normal)))
+    //console.log("original: ", incidence_vector , " refletected: ", reflextion_vector)
+    this.colide_dof = reflextion_vector
+
+    this.colide_pos.x = this.position.x + this.velocity*delta*this.colide_dof.x
+    this.colide_pos.z = this.position.z + this.velocity*delta*this.colide_dof.z
+    //console.log("(with collision) ", this.position, ">", this.tent_pos)
+    //console.log("(w/o/ collision) ", this.position, ">", this.colide_pos)
   }
 
-  update(delta) {
-    if (this.velocity>0.05) {
-      this.velocity += this.acceleration*delta
-      this.position.x += this.velocity*delta*this.dof.x
-      this.position.z += this.velocity*delta*this.dof.z
-    } else if (this.velocity<-0.05) {
-      this.velocity += this.acceleration*delta
-      this.position.x += this.velocity*delta*this.dof.x
-      this.position.z += this.velocity*delta*this.dof.z
-    }
-  }
+
 }
 
 
@@ -197,8 +208,7 @@ class Field extends NonMoveableGraphicalEntity {
 class FieldWall extends NonMoveableGraphicalEntity {
   constructor(x, y, z) {
     super()
-    this.dof.set(-x, -y, -z).normalize() // all walls point to zero
-    console.log(this.dof)
+    this.normal.set(-x, 0, -z).normalize() // all walls point to zero
   }
 }
 
@@ -209,6 +219,7 @@ class FieldWall extends NonMoveableGraphicalEntity {
 class LengthWall extends FieldWall {
   constructor(x, y, z) {
     super(x, y, z)
+    this.name = "LengthWall"
     var height = Math.sqrt(Math.pow(2*scaling,2)/99);
     var geometry = new THREE.CubeGeometry(0, height , 2*scaling);
     var mesh = new THREE.Mesh(geometry, this.material);
@@ -228,6 +239,7 @@ class LengthWall extends FieldWall {
 class WidthWall extends FieldWall {
   constructor(x, y, z) {
     super(x, y, z)
+    this.name = "WidthWall"
     var height = Math.sqrt(Math.pow(2*scaling,2)/99);
     var geometry = new THREE.CubeGeometry(scaling, height, 0);
     var mesh = new THREE.Mesh(geometry, this.material);
@@ -283,7 +295,6 @@ class Ball extends MoveableGraphicalEntity {
     this.add(mesh);
 
     scene.add(this);
-
     this.position.x = x;
     this.position.y = y;
     this.position.z = z;
