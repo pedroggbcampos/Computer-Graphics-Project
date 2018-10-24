@@ -101,7 +101,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
        if(this === balls_in_field[0] && ball_cam){ //if true it means the ball with the camera collided
          //changes the direction in which the camera is pointing to the direction in which the ball is moving
          console.log(this.dof.x, this.dof.z)
-         camera.lookAt(new THREE.Vector3(this.dof.x, 9.3, this.dof.z));
+         camera.lookAt(new THREE.Vector3(this.dof.x, 4.5, this.dof.z));
        }
        this.position.x = this.colide_pos.x
        this.position.z = this.colide_pos.z
@@ -116,8 +116,11 @@ class MoveableGraphicalEntity extends GraphicalEntity {
        this.velocity = this.tent_vel
      }
      this.colided = false
-     //this.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), this.dof.x/30)
-     //this.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), this.dof.z/30)
+     var rotation_axis = new THREE.Vector3(0, 1, 0)
+     rotation_axis.cross(new THREE.Vector3(this.dof.x, 0, this.dof.z))
+     rotation_axis.normalize()
+     this.rotateOnAxis(rotation_axis, this.velocity/50);
+
 
    }
 

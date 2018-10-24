@@ -1,7 +1,7 @@
 /*global THREE, requestAnimationFrame, console*/
 
 var camera, scene, renderer;
-var num_balls = 2;
+var num_balls = 1;
 var scaling = 50;
 var delta = 1;
 var pause = false;
@@ -94,8 +94,8 @@ function createCameraPerspectiveBall() {
   camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
   var ball = balls_in_field[0]
   ball.add(camera)
-  camera.position.y = camera.position.y + ball.radius*2 + 0.1
-  camera.lookAt(new THREE.Vector3(ball.dof.x, 9.3 ,ball.dof.z));
+  camera.position.y = camera.position.y + ball.radius + 0.1
+  camera.lookAt(new THREE.Vector3(ball.dof.x, 4.5 ,ball.dof.z));
 }
 
 function createCameraFront() {
