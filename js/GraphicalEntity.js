@@ -12,10 +12,6 @@ class GraphicalEntity extends THREE.Object3D {
     this.dof = new THREE.Vector3( 1, 0, 0 ); // facing direction
     this.boundingbox = {}
   }
-
-  /*colision_detect(other) {
-    console.log("Whoops. Not implemented")
-  }*/
 }
 /**
  * Generic Object - basically a decorated THREE.js Object3D
@@ -36,7 +32,9 @@ class NonMoveableGraphicalEntity extends GraphicalEntity {
     // wall colides with ball (calls reverse)
     if (other instanceof MoveableGraphicalEntity) {
       // ball colides with wall
-      other.colision_detect_nonmoveable(this);
+      if (other.colision_detect_nonmoveable(this)){
+        other.on_colision_nonmoveable(this)
+      }
     }
     // otherwise it is NonMovable with NonMovable which does nothing
   }
@@ -52,7 +50,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     super()
 
     // Physics Variables
-    this.velocity = 10 //new THREE.Vector3(0, 0, 0);
+    this.velocity = 2 //new THREE.Vector3(0, 0, 0);
     this.acceleration = 2
 
     // if the object has colided in the last update
@@ -65,12 +63,12 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     // are the result of the movement with no colision
     this.tent_pos = new THREE.Vector3(0, 0, 0);
     this.tent_dof = new THREE.Vector3(0, 0, 0);
-    this.tent_vel = 10
+    this.tent_vel = 2
 
     // are the result of the movement with colision
     this.colide_pos =  new THREE.Vector3(0, 0, 0);
     this.colide_dof =  new THREE.Vector3(0, 0, 0);
-    this.colide_vel =  10
+    this.colide_vel =  2
   }
 
 /**
@@ -78,6 +76,8 @@ class MoveableGraphicalEntity extends GraphicalEntity {
  */
   change_velocity(value) {
     this.velocity += value
+    this.colide_vel +=  value
+    this.tent_vel += value
   }
 
   // updates physics variables to a temporary variables
@@ -103,9 +103,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
          console.log(this.dof.x, this.dof.z)
          createCameraPerspectiveBall()
        }
-       this.position.x = this.colide_pos.x
-       this.position.z = this.colide_pos.z
-       //console.log("updating with colided ", this.position)
+       this.position.set(this.colide_pos.x, this.radius, this.colide_pos.z)
        this.velocity = this.colide_vel
      } else {
        this.dof = this.tent_dof
@@ -127,27 +125,33 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   colision_detect(other) {
     // console.log("> detecting colision")
     if (other instanceof MoveableGraphicalEntity) {
-      this.colision_detect_moveable(other); // ball colides with ball
+      if (this.colision_detect_moveable(other)){ // ball colides with ball
+        this.on_colision_moveable(other)
+      }
     } else if (other instanceof NonMovableGraphicalEntity) {
-      this.colision_detect_nonmoveable(other); // ball colides with wall
+      if (this.colision_detect_nonmoveable(other)){ // ball colides with wall
+        this.on_colision_nonmoveable(other)
+      }
     } else {
       console.log(this, "colided with object with unidentified colision properties");
     }
   }
 
+
+  // only detects
   colision_detect_moveable(other){
     // distance between centers of spheres
     var dist = this.tent_pos.distanceTo(other.tent_pos)
 
-    // TODO not tested
     if (dist < this.boundingbox.radious + other.boundingbox.radious) {
-      this.colided = true
-      this.on_colision_moveable(other);
+      return true
     }
+    return false
   }
 
   on_colision_moveable(other){
-    console.log("resolved colision between balls")
+    //console.log("resolved colision between balls")
+    this.colided = true
     other.colided = true
     // exchange the velocities and moveing directions
     this.colide_dof = other.dof.clone()
@@ -178,31 +182,31 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     var dist = dist_vect.dot(other.normal)
 
     if (dist < this.boundingbox.radious) {
-      this.colided = true
-      this.on_colision_nonmoveable(other)
+      return true
     }
+    return false
   }
 
- /**
-  *
-  */
+
   on_colision_nonmoveable(other){
     /**
      * BUG when the ball is too deep into the wall when the detection is called
      */
+    this.colided = true
     // reflection_vector = dof−2(dof⋅normal)normal
-    //console.log("colided with wall", other.normal)
     var incidence_vector = this.dof.clone()
-
     var reflextion_vector = incidence_vector.clone()
     var normal = other.normal.clone()
-    reflextion_vector.sub(normal.multiplyScalar(2*incidence_vector.dot(other.normal)))
-    //console.log("original: ", incidence_vector , " refletected: ", reflextion_vector)
-    this.colide_dof = reflextion_vector
+    if (other.normal.dot(incidence_vector) > 0) { // case the ball is in the wall
+      reflextion_vector = incidence_vector
+    } else {
+      reflextion_vector.sub(normal.multiplyScalar(2*incidence_vector.dot(other.normal)))
+      this.colide_dof = reflextion_vector
+    }
+
+    // update colide pos
     this.colide_pos.x = this.position.x + this.velocity*delta*this.colide_dof.x
     this.colide_pos.z = this.position.z + this.velocity*delta*this.colide_dof.z
-    //console.log("(with collision) ", this.position, ">", this.tent_pos)
-    //console.log("(w/o/ collision) ", this.position, ">", this.colide_pos)
   }
 
 
@@ -304,10 +308,11 @@ class Ball extends MoveableGraphicalEntity {
   constructor(x, y, z) {
     super()
     this.radius = Math.sqrt(Math.pow(2*scaling,2)/99) / 2
-    this.material = new THREE.MeshBasicMaterial({ color: 0xcd853f, wireframe: true});
+    var random_color = Math.floor(Math.random()*0xFFFFFF)
+    this.material = new THREE.MeshBasicMaterial({ color: random_color, wireframe: true});
     this.name = "Ball"
 
-    var geometry = new THREE.SphereGeometry(this.radius);
+    var geometry = new THREE.SphereGeometry(this.radius,20, 20);
     var mesh = new THREE.Mesh(geometry, this.material);
     mesh.position.set(x, y, z);
     this.add(mesh);
@@ -316,7 +321,7 @@ class Ball extends MoveableGraphicalEntity {
     this.position.y = y;
     this.position.z = z;
     this.axis = new THREE.AxisHelper(12)
-    //this.axis.visible = !this.axis.visible;
+    this.axis.visible = !this.axis.visible;
     this.mesh.add(this.axis);
 
     scene.add(this);
@@ -327,17 +332,27 @@ class Ball extends MoveableGraphicalEntity {
 * Ball Object & related functions
 */
 class FieldBall extends Ball {
-  constructor(objs_already_placed) {
+  constructor(balls_placed) {
     super(0, 0, 0)
+    var colided = true
     var min_x = -scaling/2 + this.radius
     var max_x =  scaling/2 - this.radius
     var min_y = -scaling   + this.radius
     var max_y =  scaling   - this.radius
-    this.position.x = randFloat(min_x, max_x)
     this.position.y += this.radius
+    this.position.x = randFloat(min_x, max_x)
     this.position.z = randFloat(min_y, max_y)
     this.dof.x = randFloat(-5, 5)
     this.dof.z = randFloat(-5, 5)
+    this.tent_pos = this.position.clone()
+    this.tent_dof = this.dof.clone()
+
+    // cycles through until it no longer clashes with other balls
+    while (detect_movable_colision(this, balls_placed)) {
+      this.position.x = randFloat(min_x, max_x)
+      this.position.z = randFloat(min_y, max_y)
+      this.tent_pos = this.position.clone()
+    }
   }
 
 }
