@@ -91,11 +91,11 @@ function createCameraPerspective() {
 }
 
 function createCameraPerspectiveBall() {
-  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
+  camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 1, 1000 );
   var ball = balls_in_field[0]
   ball.add(camera)
   camera.position.y = camera.position.y + ball.radius + 0.1
-  camera.lookAt(new THREE.Vector3(ball.dof.x, 4.5 ,ball.dof.z));
+  camera.lookAt(new THREE.Vector3(ball.dof.x, 5.5 ,ball.dof.z));
 }
 
 function createCameraFront() {
