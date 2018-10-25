@@ -1,7 +1,7 @@
 /*global THREE, requestAnimationFrame, console*/
 
 var camera, scene, renderer;
-var num_balls = 1;
+var num_balls = 3;
 var scaling = 50;
 var delta = 1;
 var pause = false;
@@ -91,7 +91,7 @@ function createCameraPerspective() {
 }
 
 function createCameraPerspectiveBall() {
-  camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 1, 1000 );
+  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
   var ball = balls_in_field[0]
   ball.add(camera)
   camera.position.y = camera.position.y + ball.radius + 0.1
