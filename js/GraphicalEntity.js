@@ -148,15 +148,22 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   }
 
   on_colision_moveable(other){
-    /*console.log("resolved colision between balls")
-    this.position.x = this.colide_pos.x
-  	this.position.y = this.colide_pos.y
-    other.position.x = other.colide_pos.x
-    other.position.y = other.colide_pos.y
-    var tmp_velocity = this.velocity
-    this.velocity = - other.velocity
-    other.velocity = - tmp_velocity
-    */
+    console.log("resolved colision between balls")
+    other.colided = true
+    // exchange the velocities and moveing directions
+    this.colide_dof = other.dof.clone()
+    this.colide_vel = other.velocity
+    other.colide_dof = this.dof.clone()
+    other.colide_vel = this.velocity
+
+    // update colide_pos of this
+    this.colide_pos.x = this.position.x + this.velocity*delta*this.colide_dof.x
+    this.colide_pos.z = this.position.z + this.velocity*delta*this.colide_dof.z
+
+    // update colide_pos of other1
+    other.colide_pos.x = other.position.x + other.velocity*delta*other.colide_dof.x
+    other.colide_pos.z = other.position.z + other.velocity*delta*other.colide_dof.z
+
   }
 
   // we assume that if it is coliding with a non movable object
