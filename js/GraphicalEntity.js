@@ -117,9 +117,10 @@ class MoveableGraphicalEntity extends GraphicalEntity {
      }
      this.colided = false
      var rotation_axis = new THREE.Vector3(0, 1, 0)
+
      rotation_axis.cross(new THREE.Vector3(this.dof.x, 0, this.dof.z))
      rotation_axis.normalize()
-     this.rotateOnAxis(rotation_axis, Math.abs(this.velocity/58));
+     this.mesh.rotateOnWorldAxis(rotation_axis, Math.abs(this.velocity/58));
 
    }
 
@@ -310,12 +311,13 @@ class Ball extends MoveableGraphicalEntity {
     var mesh = new THREE.Mesh(geometry, this.material);
     mesh.position.set(x, y, z);
     this.add(mesh);
+    this.mesh = mesh
     this.position.x = x;
     this.position.y = y;
     this.position.z = z;
     this.axis = new THREE.AxisHelper(12)
     //this.axis.visible = !this.axis.visible;
-    this.add(this.axis);
+    this.mesh.add(this.axis);
 
     scene.add(this);
   }
