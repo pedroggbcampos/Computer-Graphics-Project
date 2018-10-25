@@ -12,10 +12,6 @@ class GraphicalEntity extends THREE.Object3D {
     this.dof = new THREE.Vector3( 1, 0, 0 ); // facing direction
     this.boundingbox = {}
   }
-
-  /*colision_detect(other) {
-    console.log("Whoops. Not implemented")
-  }*/
 }
 /**
  * Generic Object - basically a decorated THREE.js Object3D
@@ -36,7 +32,9 @@ class NonMoveableGraphicalEntity extends GraphicalEntity {
     // wall colides with ball (calls reverse)
     if (other instanceof MoveableGraphicalEntity) {
       // ball colides with wall
-      other.colision_detect_nonmoveable(this);
+      if (other.colision_detect_nonmoveable(this)){
+        other.on_colision_nonmoveable(this)
+      }
     }
     // otherwise it is NonMovable with NonMovable which does nothing
   }
@@ -124,26 +122,33 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   colision_detect(other) {
     // console.log("> detecting colision")
     if (other instanceof MoveableGraphicalEntity) {
-      this.colision_detect_moveable(other); // ball colides with ball
+      if (this.colision_detect_moveable(other)){ // ball colides with ball
+        this.on_colision_moveable(other)
+      }
     } else if (other instanceof NonMovableGraphicalEntity) {
-      this.colision_detect_nonmoveable(other); // ball colides with wall
+      if (this.colision_detect_nonmoveable(other)){ // ball colides with wall
+        this.on_colision_nonmoveable(other)
+      }
     } else {
       console.log(this, "colided with object with unidentified colision properties");
     }
   }
 
+
+  // only detects
   colision_detect_moveable(other){
     // distance between centers of spheres
     var dist = this.tent_pos.distanceTo(other.tent_pos)
 
     if (dist < this.boundingbox.radious + other.boundingbox.radious) {
-      this.colided = true
-      this.on_colision_moveable(other);
+      return true
     }
+    return false
   }
 
   on_colision_moveable(other){
     //console.log("resolved colision between balls")
+    this.colided = true
     other.colided = true
     // exchange the velocities and moveing directions
     this.colide_dof = other.dof.clone()
@@ -174,9 +179,9 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     var dist = dist_vect.dot(other.normal)
 
     if (dist < this.boundingbox.radious) {
-      this.colided = true
-      this.on_colision_nonmoveable(other)
+      return true
     }
+    return false
   }
 
 
@@ -184,6 +189,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     /**
      * BUG when the ball is too deep into the wall when the detection is called
      */
+    this.colided = true
     // reflection_vector = dof−2(dof⋅normal)normal
     var incidence_vector = this.dof.clone()
     var reflextion_vector = incidence_vector.clone()
@@ -194,9 +200,6 @@ class MoveableGraphicalEntity extends GraphicalEntity {
       reflextion_vector.sub(normal.multiplyScalar(2*incidence_vector.dot(other.normal)))
       this.colide_dof = reflextion_vector
     }
-
-    console.log("1>>",other.normal.dot(incidence_vector))
-    console.log("2>>",other.normal.dot(incidence_vector))
 
     // update colide pos
     this.colide_pos.x = this.position.x + this.velocity*delta*this.colide_dof.x
@@ -314,7 +317,6 @@ class Ball extends MoveableGraphicalEntity {
     this.position.y = y;
     this.position.z = z;
     this.axis = new THREE.AxisHelper(12)
-    //this.axis.visible = !this.axis.visible;
     this.add(this.axis);
 
     scene.add(this);
@@ -325,17 +327,27 @@ class Ball extends MoveableGraphicalEntity {
 * Ball Object & related functions
 */
 class FieldBall extends Ball {
-  constructor(objs_already_placed) {
+  constructor(balls_placed) {
     super(0, 0, 0)
+    var colided = true
     var min_x = -scaling/2 + this.radius
     var max_x =  scaling/2 - this.radius
     var min_y = -scaling   + this.radius
     var max_y =  scaling   - this.radius
-    this.position.x = randFloat(min_x, max_x)
     this.position.y += this.radius
+    this.position.x = randFloat(min_x, max_x)
     this.position.z = randFloat(min_y, max_y)
     this.dof.x = randFloat(-5, 5)
     this.dof.z = randFloat(-5, 5)
+    this.tent_pos = this.position.clone()
+    this.tent_dof = this.dof.clone()
+
+    // cycles through until it no longer clashes with other balls
+    while (detect_movable_colision(this, balls_placed)) {
+      this.position.x = randFloat(min_x, max_x)
+      this.position.z = randFloat(min_y, max_y)
+      this.tent_pos = this.position.clone()
+    }
   }
 
 }

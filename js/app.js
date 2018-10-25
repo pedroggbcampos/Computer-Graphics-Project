@@ -31,8 +31,6 @@ function createScene() {
     addObject(new FieldBase(0, 0, 0), "base", false);
     for (var i = 0; i < num_balls; i++) {
       balls_in_field.push(addObject(new FieldBall(balls_in_field)));
-      console.log(objects_colidable)
-
     }
 }
 
