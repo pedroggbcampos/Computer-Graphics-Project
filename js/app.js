@@ -98,6 +98,15 @@ function createCameraPerspectiveBall() {
   camera.lookAt(new THREE.Vector3(ball.dof.x, 5.5 ,ball.dof.z));
 }
 
+/*function createCameraPerspectiveBall() {
+  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+  var ball = balls_in_field[0]
+  camera.position = ball.position
+  camera.position.x -= ball.dof.x
+  camera.position.z -= ball.dof.z
+  camera.lookAt(new THREE.Vector3(ball.dof.x, ball.radius ,ball.dof.z));
+}*/
+
 function createCameraFront() {
   camera = new THREE.OrthographicCamera(
   window.innerWidth / - 16, window.innerWidth / 16,
