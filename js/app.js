@@ -1,7 +1,7 @@
 /*global THREE, requestAnimationFrame, console*/
 
 var camera, scene, renderer;
-var num_balls = 3;
+var num_balls = 10;
 var scaling = 50;
 var delta = 1;
 var pause = false;

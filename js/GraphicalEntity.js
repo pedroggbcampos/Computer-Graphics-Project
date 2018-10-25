@@ -143,7 +143,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
   }
 
   on_colision_moveable(other){
-    console.log("resolved colision between balls")
+    //console.log("resolved colision between balls")
     other.colided = true
     // exchange the velocities and moveing directions
     this.colide_dof = other.dof.clone()
@@ -186,12 +186,17 @@ class MoveableGraphicalEntity extends GraphicalEntity {
      */
     // reflection_vector = dof−2(dof⋅normal)normal
     var incidence_vector = this.dof.clone()
-
     var reflextion_vector = incidence_vector.clone()
     var normal = other.normal.clone()
-    reflextion_vector.sub(normal.multiplyScalar(2*incidence_vector.dot(other.normal)))
+    if (other.normal.dot(incidence_vector) > 0) { // case the ball is in the wall
+      reflextion_vector = incidence_vector
+    } else {
+      reflextion_vector.sub(normal.multiplyScalar(2*incidence_vector.dot(other.normal)))
+      this.colide_dof = reflextion_vector
+    }
 
-    this.colide_dof = reflextion_vector
+    console.log("1>>",other.normal.dot(incidence_vector))
+    console.log("2>>",other.normal.dot(incidence_vector))
 
     // update colide pos
     this.colide_pos.x = this.position.x + this.velocity*delta*this.colide_dof.x
@@ -301,7 +306,7 @@ class Ball extends MoveableGraphicalEntity {
     this.material = new THREE.MeshBasicMaterial({ color: random_color, wireframe: true});
     this.name = "Ball"
 
-    var geometry = new THREE.SphereGeometry(this.radius);
+    var geometry = new THREE.SphereGeometry(this.radius,20, 20);
     var mesh = new THREE.Mesh(geometry, this.material);
     mesh.position.set(x, y, z);
     this.add(mesh);
