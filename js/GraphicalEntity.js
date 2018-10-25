@@ -297,7 +297,8 @@ class Ball extends MoveableGraphicalEntity {
   constructor(x, y, z) {
     super()
     this.radius = Math.sqrt(Math.pow(2*scaling,2)/99) / 2
-    this.material = new THREE.MeshBasicMaterial({ color: 0xcd853f, wireframe: true});
+    var random_color = Math.floor(Math.random()*0xFFFFFF)
+    this.material = new THREE.MeshBasicMaterial({ color: random_color, wireframe: true});
     this.name = "Ball"
 
     var geometry = new THREE.SphereGeometry(this.radius);
