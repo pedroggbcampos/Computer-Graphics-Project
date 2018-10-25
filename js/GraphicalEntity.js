@@ -104,7 +104,6 @@ class MoveableGraphicalEntity extends GraphicalEntity {
          camera.lookAt(new THREE.Vector3(this.dof.x, 9.3, this.dof.z));
        }
        this.position.set(this.colide_pos.x, 0, this.colide_pos.z)
-       //console.log("updating with colided ", this.position)
        this.velocity = this.colide_vel
      } else {
        this.dof = this.tent_dof
@@ -133,7 +132,6 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     // distance between centers of spheres
     var dist = this.tent_pos.distanceTo(other.tent_pos)
 
-    // TODO not tested
     if (dist < this.boundingbox.radious + other.boundingbox.radious) {
       this.colided = true
       this.on_colision_moveable(other);
@@ -177,26 +175,23 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     }
   }
 
- /**
-  *
-  */
+
   on_colision_nonmoveable(other){
     /**
      * BUG when the ball is too deep into the wall when the detection is called
      */
     // reflection_vector = dof−2(dof⋅normal)normal
-    //console.log("colided with wall", other.normal)
     var incidence_vector = this.dof.clone()
 
     var reflextion_vector = incidence_vector.clone()
     var normal = other.normal.clone()
     reflextion_vector.sub(normal.multiplyScalar(2*incidence_vector.dot(other.normal)))
-    //console.log("original: ", incidence_vector , " refletected: ", reflextion_vector)
+
     this.colide_dof = reflextion_vector
+
+    // update colide pos
     this.colide_pos.x = this.position.x + this.velocity*delta*this.colide_dof.x
     this.colide_pos.z = this.position.z + this.velocity*delta*this.colide_dof.z
-    //console.log("(with collision) ", this.position, ">", this.tent_pos)
-    //console.log("(w/o/ collision) ", this.position, ">", this.colide_pos)
   }
 
 
