@@ -70,18 +70,21 @@ function getObject(name){
 
 function createCamera() {
   camera = new THREE.OrthographicCamera(
-  window.innerWidth / - 16, window.innerWidth / 16,
-    window.innerHeight / 16, window.innerHeight / - 16,
-    -200, 500 );
+  window.innerWidth / - 2, window.innerWidth / 2,
+    window.innerHeight / 2, window.innerHeight / - 2,
+    -200, 200 );
+    camera.isPerspectiveCamera = false
     camera.position.x = 1;
     camera.position.y = 1;
     camera.position.z = 1;
     camera.lookAt(scene.position);
+    camera.zoom = 1
   onResize() // update to the scale once
 }
 
 function createCameraPerspective() {
   camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
+  camera.isPerspectiveCamera = true
   camera.position.x = 80;
   camera.position.y = 80;
   camera.position.z = 80;
@@ -107,9 +110,10 @@ function createCameraPerspectiveBall() {
 
 function createCameraFront() {
   camera = new THREE.OrthographicCamera(
-  window.innerWidth / - 16, window.innerWidth / 16,
     window.innerHeight / 16, window.innerHeight / - 16,
     -200, 500 );
+    camera.isPerspectiveCamera = false
+    window.innerWidth / - 16, window.innerWidth / 16,
     camera.position.x = 0;
     camera.position.y = 0;
     camera.position.z = 1;
@@ -120,10 +124,11 @@ function createCameraTop() {
     window.innerWidth / - 16, window.innerWidth / 16,
     window.innerHeight / 16, window.innerHeight / - 16,
     -200, 500 );
-    camera.position.x = 0;
-    camera.position.y = 15;
-    camera.position.z = 0;
-    camera.lookAt(scene.position);
+  camera.isPerspectiveCamera = false
+  camera.position.x = 0;
+  camera.position.y = 15;
+  camera.position.z = 0;
+  camera.lookAt(scene.position);
 }
 
 function createCameraSide() {
@@ -131,17 +136,51 @@ function createCameraSide() {
   window.innerWidth / - 16, window.innerWidth / 16,
     window.innerHeight / 16, window.innerHeight / - 16,
     -200, 500 );
-    camera.position.x = 1;
-    camera.position.y = 0;
-    camera.position.z = 0;
-    camera.lookAt(scene.position);
+  camera.isPerspectiveCamera = false
+  camera.position.x = 1;
+  camera.position.y = 0;
+  camera.position.z = 0;
+  camera.lookAt(scene.position);
 }
 
 function onResize() {
   // TODO fix this function because it is wrong
   'use strict';
+  var aspect = window.innerWidth / window.innerHeight;
+  var frustumSize = 100;
 
-  var w = window.innerWidth;
+  console.log(camera.isOrthographicCamera)
+  console.log(camera.isPerspectiveCamera)
+  if (camera.isPerspectiveCamera) {
+    camera.aspect = aspect
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+    // Updates the camera projection matrix. Must be called after any change of parameters.
+    camera.updateProjectionMatrix();
+
+  } else { // OrthographicCamera
+    /*   __________________ ^
+     *   |        |       | |
+     *   |________|_______| | FrustumSize
+     *   |        |       | |
+     *   |________|_______| V
+     *   <---------------->
+     *    FrustumSize * aspect
+     */
+		camera.left   = - frustumSize * aspect / 2;
+		camera.right  =   frustumSize * aspect / 2;
+		camera.top    =   frustumSize / 2;
+		camera.bottom = - frustumSize / 2;
+
+    // Updates the camera projection matrix. Must be called after any change of parameters.
+		camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+  }
+
+
+  /*var w = window.innerWidth;
   var h = window.innerHeight;
   var viewSize =  80 * (1 / h + 1 / w);
   camera.left = w / - 2 * viewSize;
@@ -149,7 +188,7 @@ function onResize() {
   camera.top = h / 2 * viewSize;
   camera.bottom = h / - 2 * viewSize;
   camera.updateProjectionMatrix();
-  renderer.setSize( w, h );
+  renderer.setSize( w, h );*/
 }
 
 function onKeyUp(e) {
