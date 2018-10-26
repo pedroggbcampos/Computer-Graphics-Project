@@ -106,14 +106,6 @@ function createCameraPerspectiveBall() {
   camera.lookAt(ball.position);
 }
 
-/*function createCameraPerspectiveBall() {
-  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-  var ball = balls_in_field[0]
-  camera.position = ball.position
-  camera.position.x -= ball.dof.x
-  camera.position.z -= ball.dof.z
-  camera.lookAt(new THREE.Vector3(ball.dof.x, ball.radius ,ball.dof.z));
-}*/
 
 function createCameraFront() {
   camera = new THREE.OrthographicCamera(
@@ -153,16 +145,13 @@ function createCameraSide() {
 }
 
 function onResize() {
-  // TODO fix this function because it is wrong
   'use strict';
   var aspect = window.innerWidth / window.innerHeight;
   var frustumSize = 100;
 
-  console.log(camera.isOrthographicCamera)
-  console.log(camera.isPerspectiveCamera)
   if (camera.isPerspectiveCamera) {
     camera.aspect = aspect
-
+    //Resizes the output canvas to (width, height) with device pixel ratio taken into account
     renderer.setSize( window.innerWidth, window.innerHeight );
 
     // Updates the camera projection matrix. Must be called after any change of parameters.
@@ -235,10 +224,6 @@ function onKeyDown(e) {
           case "51": // 3
               ball_cam = true;
               createCameraPerspectiveBall();
-              break;
-          case "52": // 4
-              ball_cam = false;
-              createCameraFront();
               break;
           case "65": //A
               // assuming all submeshes inherit material from parent object

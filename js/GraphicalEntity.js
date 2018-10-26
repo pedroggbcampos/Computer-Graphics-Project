@@ -118,8 +118,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 
      rotation_axis.cross(new THREE.Vector3(this.dof.x, 0, this.dof.z))
      rotation_axis.normalize()
-     this.mesh.rotateOnWorldAxis(rotation_axis, Math.abs(this.velocity/58));
-
+     this.mesh.rotateOnWorldAxis(rotation_axis, Math.abs(delta*this.velocity));
    }
 
   colision_detect(other) {
