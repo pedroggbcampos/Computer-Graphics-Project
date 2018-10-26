@@ -2,12 +2,11 @@ function randFloat(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-var rotWorldMatrix;
-// Rotate an object around an arbitrary axis in world space
-function rotateAroundWorldAxis(object, axis, radians) {
-    rotWorldMatrix = new THREE.Matrix4();
-    rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
-    rotWorldMatrix.premultiply(object.matrix);        // pre-multiply
-    object.matrix = rotWorldMatrix;
-    object.rotation.getWorldQuaternion(object.matrix, object.scale);
+function speedup(){
+    console.log("speedinng")
+    for (var ball in balls_in_field)
+      balls_in_field[ball].change_velocity(2.5);
+
+
+    setTimeout("speedup()",30000)
 }

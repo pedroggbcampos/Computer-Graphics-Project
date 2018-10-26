@@ -50,7 +50,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     super()
 
     // Physics Variables
-    this.velocity = 10 //new THREE.Vector3(0, 0, 0);
+    this.velocity = 2 //new THREE.Vector3(0, 0, 0);
     this.acceleration = 2
 
     // if the object has colided in the last update
@@ -63,12 +63,12 @@ class MoveableGraphicalEntity extends GraphicalEntity {
     // are the result of the movement with no colision
     this.tent_pos = new THREE.Vector3(0, 0, 0);
     this.tent_dof = new THREE.Vector3(0, 0, 0);
-    this.tent_vel = 10
+    this.tent_vel = 2
 
     // are the result of the movement with colision
     this.colide_pos =  new THREE.Vector3(0, 0, 0);
     this.colide_dof =  new THREE.Vector3(0, 0, 0);
-    this.colide_vel =  10
+    this.colide_vel =  2
   }
 
 /**
@@ -76,6 +76,8 @@ class MoveableGraphicalEntity extends GraphicalEntity {
  */
   change_velocity(value) {
     this.velocity += value
+    this.colide_vel +=  value
+    this.tent_vel += value
   }
 
   // updates physics variables to a temporary variables
@@ -101,7 +103,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
          console.log(this.dof.x, this.dof.z)
          createCameraPerspectiveBall()
        }
-       this.position.set(this.colide_pos.x, 0, this.colide_pos.z)
+       this.position.set(this.colide_pos.x, this.radius, this.colide_pos.z)
        this.velocity = this.colide_vel
      } else {
        this.dof = this.tent_dof
@@ -113,9 +115,10 @@ class MoveableGraphicalEntity extends GraphicalEntity {
      }
      this.colided = false
      var rotation_axis = new THREE.Vector3(0, 1, 0)
+
      rotation_axis.cross(new THREE.Vector3(this.dof.x, 0, this.dof.z))
      rotation_axis.normalize()
-     this.rotateOnAxis(rotation_axis, Math.abs(this.velocity/58));
+     this.mesh.rotateOnWorldAxis(rotation_axis, Math.abs(this.velocity/58));
 
    }
 
@@ -313,11 +316,13 @@ class Ball extends MoveableGraphicalEntity {
     var mesh = new THREE.Mesh(geometry, this.material);
     mesh.position.set(x, y, z);
     this.add(mesh);
+    this.mesh = mesh
     this.position.x = x;
     this.position.y = y;
     this.position.z = z;
     this.axis = new THREE.AxisHelper(12)
-    this.add(this.axis);
+    this.axis.visible = !this.axis.visible;
+    this.mesh.add(this.axis);
 
     scene.add(this);
   }
