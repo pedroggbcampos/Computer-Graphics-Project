@@ -19,7 +19,6 @@ function objs_colision_detection(obj_array) {
 function detect_movable_colision(obj, objs) {
   colided = false
   for (var i=0; i < objs.length; i++) {
-    console.log("loop")
     if (obj.colision_detect_moveable(objs[i])) {
       colided = true;
       break

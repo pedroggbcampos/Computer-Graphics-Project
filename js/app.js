@@ -16,7 +16,6 @@ var balls_in_field = []
 
 var clock = new THREE.Clock();
 
-setTimeout("speedup()",30000)
 
 function createScene() {
     'use strict';
@@ -34,6 +33,7 @@ function createScene() {
     for (var i = 0; i < num_balls; i++) {
       balls_in_field.push(addObject(new FieldBall(balls_in_field)));
     }
+    setTimeout("speedup()",30000)
 }
 
 
@@ -135,6 +135,8 @@ function createCameraTop() {
   camera.position.x = 0;
   camera.position.y = 15;
   camera.position.z = 0;
+  camera.rotation.y = (Math.PI /2)
+  console.log(camera.rotation.y)
   camera.lookAt(scene.position);
 }
 
@@ -305,7 +307,7 @@ function animate() {
         }
       });
     }
-    console.log(clock.elapsedTime)
+    //console.log(clock.elapsedTime)
 
     render();
 

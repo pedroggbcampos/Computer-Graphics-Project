@@ -5,7 +5,7 @@ function randFloat(min, max) {
 function speedup(){
     console.log("speedinng")
     for (var ball in balls_in_field)
-      balls_in_field[ball].change_velocity(2.5);
+      balls_in_field[ball].add_velocity(2.5);
 
 
     setTimeout("speedup()",30000)

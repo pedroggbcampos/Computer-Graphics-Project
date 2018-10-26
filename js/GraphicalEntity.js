@@ -74,7 +74,7 @@ class MoveableGraphicalEntity extends GraphicalEntity {
 /**
  * Scales the Velocity by a factor
  */
-  change_velocity(value) {
+  add_velocity(value) {
     this.velocity += value
     this.colide_vel +=  value
     this.tent_vel += value
