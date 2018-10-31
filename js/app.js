@@ -5,14 +5,11 @@ var num_balls = 10;
 var scaling = 50;
 var delta = 1;
 var pause = false;
-var ball_cam = false; // changes to true when user is watching ball camera
 
 
 var keys_pressed = {}; // stores the keys pressed
 var objects = []; // Objects in the scene
-var objects_colidable = []; // Objects in the scene that are colidable
 var objects_named = {} // object that are named and need to be called
-var balls_in_field = []
 
 var clock = new THREE.Clock();
 
@@ -25,15 +22,7 @@ function createScene() {
 
     scene.add(new THREE.AxisHelper(10));
 
-    addObject(new LengthWall(scaling/2, 0, 0), "front");
-    addObject(new LengthWall(-scaling/2, 0, 0), "back");
-    addObject(new WidthWall(0, 0, scaling), "left");
-    addObject(new WidthWall(0, 0, -scaling), "right");
-    addObject(new FieldBase(0, 0, 0), "base", false);
-    for (var i = 0; i < num_balls; i++) {
-      balls_in_field.push(addObject(new FieldBall(balls_in_field)));
-    }
-    setTimeout("speedup()",30000)
+    //addObject(new LengthWall(scaling/2, 0, 0), "front");
 }
 
 
@@ -49,9 +38,6 @@ function addObject(object, name, colidable){
     } else {
       objects_named[name]=object;
     }
-  }
-  if (typeof colidable == "undefined" || colidable) {
-    objects_colidable.push(object)
   }
   objects.push(object); // add object to the generic array of scene objects
   return object // returns object such that other function can catch its reference
@@ -91,19 +77,6 @@ function createCameraPerspective() {
   camera.position.y = 80;
   camera.position.z = 80;
   camera.lookAt(scene.position);
-}
-
-function createCameraPerspectiveBall() {
-  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-  var ball = balls_in_field[0]
-  ball.add(camera)
-  camera.position.y = camera.position.y + 1.6*ball.radius
-  var norm_ball_dof = ball.dof.clone()
-  norm_ball_dof = norm_ball_dof.normalize()
-  camera.position.x = -16*norm_ball_dof.x
-  camera.position.z = -16*norm_ball_dof.z
-
-  camera.lookAt(ball.position);
 }
 
 
@@ -214,16 +187,12 @@ function onKeyDown(e) {
           case "40": // down
               break;
           case "49": // 1
-              ball_cam = false;
               createCameraTop();
               break;
           case "50": // 2
-              ball_cam = false;
               createCameraPerspective();
               break;
           case "51": // 3
-              ball_cam = true;
-              createCameraPerspectiveBall();
               break;
           case "65": //A
               // assuming all submeshes inherit material from parent object
@@ -232,9 +201,6 @@ function onKeyDown(e) {
                 objects[object].material.wireframe = !objects[object].material.wireframe;
               break;
           case "69": //E
-              //shows or hides the axis to each ball in the Field
-              for (var ball in balls_in_field)
-                balls_in_field[ball].axis.visible = !balls_in_field[ball].axis.visible;
               break;
           case "80": //P - pauses the game
               pause = !pause;
@@ -274,19 +240,8 @@ function animate() {
 
     delta = clock.getDelta();
     if (!pause) {
-
-      // Tentative Update
-      objects.map( function(object) {
-        if (typeof object.tentativeUpdate === 'function') {
-          object.tentativeUpdate(delta);
-        }
-      })
-
-      // colision update
-      objs_colision_detection(objects_colidable)
-
       // Update
-      objects_colidable.map( function(object) {
+      objects.map( function(object) {
         if (typeof object.update === 'function') {
           object.update(delta);
         }
