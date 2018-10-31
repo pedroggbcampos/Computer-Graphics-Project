@@ -10,6 +10,8 @@ class GraphicalEntity extends THREE.Geometry {
   constructor(){
     super()
   }
+  update(delta) {  }
+
 }
 /**
  * Generic Object - basically a decorated THREE.js Object3D
