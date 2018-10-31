@@ -150,16 +150,6 @@ function onResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
   }
 
-
-  /*var w = window.innerWidth;
-  var h = window.innerHeight;
-  var viewSize =  80 * (1 / h + 1 / w);
-  camera.left = w / - 2 * viewSize;
-  camera.right = w / 2 * viewSize;
-  camera.top = h / 2 * viewSize;
-  camera.bottom = h / - 2 * viewSize;
-  camera.updateProjectionMatrix();
-  renderer.setSize( w, h );*/
 }
 
 function onKeyUp(e) {
