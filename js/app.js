@@ -19,8 +19,11 @@ function createScene() {
 
     scene = new THREE.Scene();
 
+    addObject(new Wing(), "left_wing");
 
     scene.add(new THREE.AxisHelper(10));
+
+
 
     //addObject(new LengthWall(scaling/2, 0, 0), "front");
 }
@@ -55,6 +58,8 @@ function getObject(name){
     console.log("error: object is not in the list")
   }
 }
+
+
 
 function createCamera() {
   camera = new THREE.OrthographicCamera(
@@ -149,17 +154,6 @@ function onResize() {
 
     renderer.setSize( window.innerWidth, window.innerHeight );
   }
-
-
-  /*var w = window.innerWidth;
-  var h = window.innerHeight;
-  var viewSize =  80 * (1 / h + 1 / w);
-  camera.left = w / - 2 * viewSize;
-  camera.right = w / 2 * viewSize;
-  camera.top = h / 2 * viewSize;
-  camera.bottom = h / - 2 * viewSize;
-  camera.updateProjectionMatrix();
-  renderer.setSize( w, h );*/
 }
 
 function onKeyUp(e) {
@@ -247,7 +241,6 @@ function animate() {
         }
       });
     }
-    //console.log(clock.elapsedTime)
 
     render();
 
