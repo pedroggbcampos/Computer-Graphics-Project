@@ -28,8 +28,12 @@ class Wing extends GraphicalEntity {
     vertices.push( new THREE.Vector3( 0, 0, 5 ) );
     vertices.push( new THREE.Vector3( 5, 0, 5 ) );
 
-    this.Mesh = constructGeometry(vertices, material)
-    scene.add(this.Mesh)
+
+    var geometry = constructGeometry(vertices)
+
+    var mesh = new THREE.Mesh(geometry, material)
+    this.add(mesh)
+    scene.add(this)
 
   }
 

@@ -8,7 +8,7 @@ function randFloat(min, max) {
       material: for example new THREE.MeshBasicMaterial()
       rgb: new THREE.Color() type
   */
-function constructGeometry(vertices, material) {
+function constructGeometry(vertices) {
   var geometry = new THREE.Geometry();
   console.log(vertices)
   for (var vertice in vertices)
@@ -23,8 +23,6 @@ function constructGeometry(vertices, material) {
   geometry.computeFaceNormals();
   geometry.computeVertexNormals();
 
-   new THREE.MeshBasicMaterial();
-
-  return new THREE.Mesh(geometry, material)
+  return geometry
 
 }
