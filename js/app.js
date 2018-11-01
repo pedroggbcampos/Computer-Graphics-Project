@@ -106,7 +106,6 @@ function createCameraTop() {
   camera.position.y = 15;
   camera.position.z = 0;
   camera.rotation.y = (Math.PI /2)
-  console.log(camera.rotation.y)
   camera.lookAt(scene.position);
 }
 
