@@ -19,7 +19,7 @@ function createScene() {
 
     scene = new THREE.Scene();
 
-    addObject(new Wing(), "left_wing");
+    addObject(new Wing(0,0,0), "left_wing");
 
     scene.add(new THREE.AxisHelper(10));
 
@@ -170,6 +170,10 @@ function onKeyDown(e) {
       if (!keys_pressed[key]) continue;
       switch (key) {
           case "66": //B
+              break;
+          case "71":
+              for (var object in objects)
+                objects[object].change_material()
               break;
           case "37": // left
               break;
