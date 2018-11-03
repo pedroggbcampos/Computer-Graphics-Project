@@ -15,8 +15,8 @@ function randFloat(min, max) {
 function constructGeometry(vertices) {
   var geometry = new THREE.Geometry();
   console.log(vertices)
-  for (var vertice in vertices)
-    geometry.vertices.push(vertices[vertice]);
+  for (var vertex in vertices)
+    geometry.vertices.push(vertices[vertex]);
   var normal = new THREE.Vector3();
   for (var i = 0; i < vertices.length; i += 3){  // vertices / 3  = number of faces
       console.log(i)
@@ -30,3 +30,4 @@ function constructGeometry(vertices) {
   return geometry
 
 }
+15
