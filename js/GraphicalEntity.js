@@ -12,17 +12,22 @@ class GraphicalEntity extends THREE.Object3D {
     this.materials = [] // stores the list of materials with different shadings
     this.current_material_index = 0
     this.num_materials = 3
+
+    // group of meshes
     this.mesh_group = new THREE.Group();
   }
   update(delta) {  }
 
   change_material() {
-    console.log()
+    console.log(this)
     this.current_material_index = (this.current_material_index + 1) % this.num_materials
 
+    // required to do this because the scope of the following function is limited
+    var material_index = this.current_material_index
     this.mesh_group.traverse(function (node) {
       if (node instanceof THREE.Mesh) {
-        node.material = node.materials[this.current_material_index];
+        console.log(node.materials[material_index])
+        node.material = node.materials[material_index];
       }
     });
 
@@ -45,9 +50,8 @@ class Plane extends GraphicalEntity {
   }
 
   create_wing(x,y,z) {
-    var wing = new THREE.Mesh(geometry, this.materials[0])
     // wing vertices
-    wing.materials = []
+    var materials = []
     var vertices = []
     vertices.push( new THREE.Vector3( 5, 0, 0 ) );
     vertices.push( new THREE.Vector3( 0, 5, 0 ) );
@@ -63,11 +67,15 @@ class Plane extends GraphicalEntity {
 
     var geometry = constructGeometry(vertices)
 
+
     // add the different material shading
     var wing_color = 0x00cc00;
-    wing.materials.push(new THREE.MeshBasicMaterial( { color : wing_color } ));
-    wing.materials.push(new THREE.MeshLambertMaterial( { color : wing_color } ));
-    wing.materials.push(new THREE.MeshPhongMaterial( { color : wing_color } ));
+    materials.push(new THREE.MeshBasicMaterial( { color : wing_color } ));
+    materials.push(new THREE.MeshLambertMaterial( { color : wing_color } ));
+    materials.push(new THREE.MeshPhongMaterial( { color : wing_color } ));
+
+    var wing = new THREE.Mesh(geometry, materials[0])
+    wing.materials = materials
 
     wing.position.set(x,y,z)
     return wing

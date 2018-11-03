@@ -3,6 +3,10 @@ function randFloat(min, max) {
 }
 
 /**
+ * Polygonal mesh functions
+ */
+
+/**
   *Function that constructs a given geometry and returns its Mesh
       vertices, positions: array of THREE.Vector3()
       material: for example new THREE.MeshBasicMaterial()
