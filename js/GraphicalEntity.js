@@ -11,46 +11,47 @@ class GraphicalEntity extends THREE.Object3D {
     super()
     this.materials = [] // stores the list of materials with different shadings
     this.current_material_index = 0
+    this.num_materials = 3
+    this.mesh_group = new THREE.Group();
   }
   update(delta) {  }
 
   change_material() {
     console.log()
-    this.mesh.material = this.materials[(this.current_material_index + 1 )% (this.materials.length )]
-    this.current_material_index += 1
+    this.current_material_index = (this.current_material_index + 1) % this.num_materials
+
+    this.mesh_group.traverse(function (node) {
+      if (node instanceof THREE.Mesh) {
+        node.material = node.materials[this.current_material_index];
+      }
+    });
+
   }
 
 }
 /**
  * Generic Object - basically a decorated THREE.js Object3D
  */
-class Wing extends GraphicalEntity {
+class Plane extends GraphicalEntity {
   constructor(x,y,z) {
     super()
-    var vertices = this.generateVertices()
 
-    // add the different material shading
-    var wing_color = 0x00cc00;
-    this.materials.push(new THREE.MeshBasicMaterial( { color : wing_color } ));
-    this.materials.push(new THREE.MeshLambertMaterial( { color : wing_color } ));
-    this.materials.push(new THREE.MeshPhongMaterial( { color : wing_color } ));
+    var wing = this.create_wing(0,0,0)
+    this.mesh_group.add(wing)
 
-    var geometry = constructGeometry(vertices)
-
-
-    console.log( this.materials[0])
-    this.mesh = new THREE.Mesh(geometry, this.materials[0])
-
-    this.add(this.mesh)
+    this.add(this.mesh_group)
     this.position.set(x,y,z)
     scene.add(this)
   }
 
-  generateVertices() {
-    var vertices = [];
+  create_wing(x,y,z) {
+    var wing = new THREE.Mesh(geometry, this.materials[0])
+    // wing vertices
+    wing.materials = []
+    var vertices = []
     vertices.push( new THREE.Vector3( 5, 0, 0 ) );
-	  vertices.push( new THREE.Vector3( 0, 5, 0 ) );
-  	vertices.push( new THREE.Vector3( 0, 0, 5 ) );
+    vertices.push( new THREE.Vector3( 0, 5, 0 ) );
+    vertices.push( new THREE.Vector3( 0, 0, 5 ) );
 
     vertices.push( new THREE.Vector3( 5, 0, 0 ) );
     vertices.push( new THREE.Vector3( 0, 0, 5 ) );
@@ -60,8 +61,19 @@ class Wing extends GraphicalEntity {
     vertices.push( new THREE.Vector3( 0, 0, 10 ) );
     vertices.push( new THREE.Vector3( 5, 0, 10 ) );
 
-    return vertices
+    var geometry = constructGeometry(vertices)
+
+    // add the different material shading
+    var wing_color = 0x00cc00;
+    wing.materials.push(new THREE.MeshBasicMaterial( { color : wing_color } ));
+    wing.materials.push(new THREE.MeshLambertMaterial( { color : wing_color } ));
+    wing.materials.push(new THREE.MeshPhongMaterial( { color : wing_color } ));
+
+    wing.position.set(x,y,z)
+    return wing
+
   }
+
 
   // update function is called to update the object
   update(delta) {  }

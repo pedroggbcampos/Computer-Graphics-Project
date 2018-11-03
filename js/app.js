@@ -19,7 +19,7 @@ function createScene() {
 
     scene = new THREE.Scene();
 
-    addObject(new Wing(0,0,0), "left_wing");
+    addObject(new Plane(0,0,0), "plane");
 
     scene.add(new THREE.AxisHelper(10));
 
