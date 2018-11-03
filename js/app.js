@@ -23,6 +23,11 @@ function createScene() {
 
     scene.add(new THREE.AxisHelper(10));
 
+    // Temporay just to test stuff
+    var spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(-40, 60, 10);
+    spotLight.castShadow = true;
+    scene.add(spotLight);
 
 
     //addObject(new LengthWall(scaling/2, 0, 0), "front");
@@ -65,13 +70,13 @@ function createCamera() {
   camera = new THREE.OrthographicCamera(
   window.innerWidth / - 2, window.innerWidth / 2,
     window.innerHeight / 2, window.innerHeight / - 2,
-    -200, 200 );
+    -500, 200 );
     camera.isPerspectiveCamera = false
     camera.position.x = 1;
-    camera.position.y = 1;
+    camera.position.y = 0.3;
     camera.position.z = 1;
     camera.lookAt(scene.position);
-    camera.zoom = 1
+    camera.zoom = 4
   onResize() // update to the scale once
 }
 

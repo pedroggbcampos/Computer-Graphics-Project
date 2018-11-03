@@ -30,4 +30,3 @@ function constructGeometry(vertices) {
   return geometry
 
 }
-15
