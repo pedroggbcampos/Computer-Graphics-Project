@@ -1,3 +1,6 @@
+/// Constants
+ALLOWED_POLY_LENGTH = 8
+
 function randFloat(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -19,7 +22,6 @@ function constructGeometry(vertices) {
     geometry.vertices.push(vertices[vertex]);
   var normal = new THREE.Vector3();
   for (var i = 0; i < vertices.length; i += 3){  // vertices / 3  = number of faces
-      console.log(i)
       var face = new THREE.Face3( i, i + 1, i + 2, normal);
       geometry.faces.push(face);
   }
@@ -28,5 +30,75 @@ function constructGeometry(vertices) {
   geometry.computeVertexNormals();
 
   return geometry
+}
 
+/**
+ * Decomposes a given triangle in
+ *     |\ (b)
+ *     | \
+ *     |  \
+ * (d) |---| (c)
+ *     |  /
+ *     | /
+ *     |/ (a)
+ **/
+function decompose_triangle(vertices, path=""){
+  var num_vertices = vertices.length
+  var result = vertices
+
+  // step 1: decompose in triangles if not already like so
+  // it pairs the first vertex with all other pairs to form triangles
+  // /!\ Part of the code incomplete
+  /*if (num_vertices > 3) {
+    result = []
+    for (var i=1; i<num_vertices-1; i++) {
+      console.log("decomposing!!!")
+      console.log(vertices[0],vertices[i],vertices[i+1])
+      result.concat(decompose_triangle([
+        vertices[0],
+        vertices[i],
+        vertices[i+1]
+      ]));
+    }
+    return result
+  }
+  result = vertices*/
+  // step 2: determine the longes edge
+  var distances = [] // contains the distances of the vertices in order
+  var max_distance = 0 // stores the maximum distance between two consecutive vertices
+  var max_i = 0        // stores the index of the above
+  for (var i in vertices){
+    if (vertices[i].distanceTo(vertices[(i+1)%num_vertices])> max_distance)
+      max_i = i;
+  }
+
+  edge1 = max_i
+  edge2 = (edge1+1)%3
+  edge3 = (edge1+2)%3
+
+  // goes through all the edges until it finds one with bigger lenght than permitterd
+  for (var i=0; i < 3; i++) {
+    console.log(path, " with distance ",vertices[edge1].distanceTo(vertices[edge2]))
+    if (vertices[edge1].distanceTo(vertices[edge2]) > ALLOWED_POLY_LENGTH) {
+      var a = vertices[edge1]
+      var b = vertices[edge2]
+      var c = vertices[edge3]
+
+      var ab = vertices[edge2].clone()
+      ab.sub(a)
+      ab.setLength(ab.length()/2)
+      var d = a.clone()
+      d = d.add(ab)
+
+      var triangle1 = decompose_triangle([a, d, c],path+"1")
+      var triangle2 = decompose_triangle([d, b, c], path+"2")
+
+      result = triangle1.concat(triangle2)
+      break
+    }
+    edge1 = (edge1+1)%3
+    edge2 = (edge1+2)%3
+    edge3 = (edge1+3)%3
+  }
+  return result
 }
