@@ -320,3 +320,38 @@ class Plane extends GraphicalEntity {
   }
 
 }
+
+/**
+ * Generic Object - basically a decorated THREE.js Object3D
+ */
+class Spotlight extends GraphicalEntity {
+  constructor(x, y, z) {
+    super()
+	
+	this.material = new THREE.MeshBasicMaterial({ color: "yellow", wireframe: true });
+	this.name = "spotlight"
+	
+	this.addSpotlightLight(0, -1, 0);
+	this.addSpotlightTop(0, 0, 0);
+	
+	scene.add(this);
+	
+    this.position.x = x;
+    this.position.y = y;
+    this.position.z = z;
+  }
+  
+  addSpotlightTop(x, y, z){
+	var geometry = new THREE.ConeGeometry(1, 2,  20, 32);
+	var mesh = new THREE.Mesh(geometry, this.material);
+	mesh.position.set(x, y, z);
+	this.add(mesh);
+  }
+  
+  addSpotlightLight(x, y, z){
+	var geometry = new THREE.SphereGeometry(.5, 32, 32);
+	var mesh = new THREE.Mesh(geometry, this.material);
+	mesh.position.set(x, y, z);
+	this.add(mesh);
+  }
+}

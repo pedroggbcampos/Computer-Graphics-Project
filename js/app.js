@@ -20,6 +20,10 @@ function createScene() {
     scene = new THREE.Scene();
 
     addObject(new Plane(0,0,0), "plane");
+	addObject(new Spotlight(10,10,10), "spotlight1");
+	addObject(new Spotlight(-10,10,10), "spotlight2");
+	addObject(new Spotlight(10,10,-10), "spotlight3");
+	addObject(new Spotlight(-10,10,-10), "spotlight4");
 
     scene.add(new THREE.AxisHelper(10));
 
