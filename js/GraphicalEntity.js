@@ -209,7 +209,7 @@ class Plane extends GraphicalEntity {
 		vertices.push( new THREE.Vector3( 0, 0, 2.5 ) );
 		vertices.push( new THREE.Vector3( 2.5, 0, 2.5 ) );
 		vertices.push( new THREE.Vector3( 0, 0, 5 ) );
-		
+
 		//Lado superior do estabilizador
 		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
 		vertices.push( new THREE.Vector3( 0, 0, 0 ) );
@@ -236,7 +236,7 @@ class Plane extends GraphicalEntity {
 		vertices.push( new THREE.Vector3( 0, 0, -2.5 ) );
 		vertices.push( new THREE.Vector3( 2.5, 0, -2.5 ) );
 		vertices.push( new THREE.Vector3( 0, 0, -5 ) );
-		
+
 		//Lado inferior do estabilizador
 		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
 		vertices.push( new THREE.Vector3( 0, 0, 0 ) );
@@ -250,7 +250,7 @@ class Plane extends GraphicalEntity {
 		vertices.push( new THREE.Vector3( 0, 0, -2.5 ) );
 		vertices.push( new THREE.Vector3( 0, 0, -5 ) );
 	}
-	
+
     var geometry = constructGeometry(vertices)
 
     // add the different material shading
@@ -266,7 +266,7 @@ class Plane extends GraphicalEntity {
     return horizontal_stabilizer
 
   }
-  
+
   create_vertical_stabilizer(x,y,z) {
     // stabilizer vertices
     var materials = []
@@ -283,20 +283,20 @@ class Plane extends GraphicalEntity {
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 5, 0 ) );
-	
-	//Lado esquerdo do estabilizador
-	vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
-	vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+
+	  //Lado esquerdo do estabilizador
+	  vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+	  vertices.push( new THREE.Vector3( 0, 0, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
 
-	vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
+	  vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
 
-	vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
+	  vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 5, 0 ) );
-	
+
     var geometry = constructGeometry(vertices)
 
     // add the different material shading
