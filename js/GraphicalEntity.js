@@ -48,6 +48,12 @@ class Plane extends GraphicalEntity {
     this.mesh_group.add(fuselage)
     var cockpit = this.create_cockpit(0,0,0)
     this.mesh_group.add(cockpit)
+	var horizontal_stabilizers1 = this.create_horizontal_stabilizers(0,5,0,"right")
+	this.mesh_group.add(horizontal_stabilizers1)
+	var horizontal_stabilizers2 = this.create_horizontal_stabilizers(0,5,0,"left")
+	this.mesh_group.add(horizontal_stabilizers2)
+	var vertical_stabilizer = this.create_vertical_stabilizer(0,5,0)
+	this.mesh_group.add(vertical_stabilizer)
 
 
     this.add(this.mesh_group)
@@ -185,6 +191,127 @@ class Plane extends GraphicalEntity {
 
   }
 
+  create_horizontal_stabilizers(x,y,z,side) {
+    // stabilizers vertices
+    var materials = []
+    var vertices = []
+	//Lado visto como estando atras do aviao
+	if(side == "right"){
+		//Lado inferior do estabilizador
+		vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 0, 0, 2.5 ) );
+
+		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 2.5, 0, 2.5 ) );
+		vertices.push( new THREE.Vector3( 0, 0, 2.5 ) );
+
+		vertices.push( new THREE.Vector3( 0, 0, 2.5 ) );
+		vertices.push( new THREE.Vector3( 2.5, 0, 2.5 ) );
+		vertices.push( new THREE.Vector3( 0, 0, 5 ) );
+		
+		//Lado superior do estabilizador
+		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 0, 0, 2.5 ) );
+
+		vertices.push( new THREE.Vector3( 2.5, 0, 2.5 ) );
+		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 0, 0, 2.5 ) );
+
+		vertices.push( new THREE.Vector3( 2.5, 0, 2.5 ) );
+		vertices.push( new THREE.Vector3( 0, 0, 2.5 ) );
+		vertices.push( new THREE.Vector3( 0, 0, 5 ) );
+	}
+	if(side == "left"){
+		//Lado superior do estabilizador
+		vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 0, 0, -2.5 ) );
+
+		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 2.5, 0, -2.5 ) );
+		vertices.push( new THREE.Vector3( 0, 0, -2.5 ) );
+
+		vertices.push( new THREE.Vector3( 0, 0, -2.5 ) );
+		vertices.push( new THREE.Vector3( 2.5, 0, -2.5 ) );
+		vertices.push( new THREE.Vector3( 0, 0, -5 ) );
+		
+		//Lado inferior do estabilizador
+		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 0, 0, -2.5 ) );
+
+		vertices.push( new THREE.Vector3( 2.5, 0, -2.5 ) );
+		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+		vertices.push( new THREE.Vector3( 0, 0, -2.5 ) );
+
+		vertices.push( new THREE.Vector3( 2.5, 0, -2.5 ) );
+		vertices.push( new THREE.Vector3( 0, 0, -2.5 ) );
+		vertices.push( new THREE.Vector3( 0, 0, -5 ) );
+	}
+	
+    var geometry = constructGeometry(vertices)
+
+    // add the different material shading
+    var horizontal_stabilizer_color = 0xff00ff;
+    materials.push(new THREE.MeshBasicMaterial( { color : horizontal_stabilizer_color } ));
+    materials.push(new THREE.MeshLambertMaterial( { color : horizontal_stabilizer_color } ));
+    materials.push(new THREE.MeshPhongMaterial( { color : horizontal_stabilizer_color } ));
+
+    var horizontal_stabilizer = new THREE.Mesh(geometry, materials[0])
+    horizontal_stabilizer.materials = materials
+
+    horizontal_stabilizer.position.set(x,y,z)
+    return horizontal_stabilizer
+
+  }
+  
+  create_vertical_stabilizer(x,y,z) {
+    // stabilizer vertices
+    var materials = []
+    var vertices = []
+	//Lado direito do estabilizador
+    vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+    vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+    vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
+
+    vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+    vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
+    vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
+
+    vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
+    vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
+    vertices.push( new THREE.Vector3( 0, 5, 0 ) );
+	
+	//Lado esquerdo do estabilizador
+	vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+	vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+    vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
+
+	vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
+    vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+    vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
+
+	vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
+    vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
+    vertices.push( new THREE.Vector3( 0, 5, 0 ) );
+	
+    var geometry = constructGeometry(vertices)
+
+    // add the different material shading
+    var vertical_stabilizer_color = 0xff0000;
+    materials.push(new THREE.MeshBasicMaterial( { color : vertical_stabilizer_color } ));
+    materials.push(new THREE.MeshLambertMaterial( { color : vertical_stabilizer_color } ));
+    materials.push(new THREE.MeshPhongMaterial( { color : vertical_stabilizer_color } ));
+
+    var vertical_stabilizer = new THREE.Mesh(geometry, materials[0])
+    vertical_stabilizer.materials = materials
+
+    vertical_stabilizer.position.set(x,y,z)
+    return vertical_stabilizer
+
+  }
 
   // update function is called to update the object
   update(delta) {

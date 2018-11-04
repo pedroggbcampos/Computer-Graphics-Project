@@ -176,7 +176,7 @@ function onKeyDown(e) {
       switch (key) {
           case "66": //B
               break;
-          case "71":
+          case "71": //G
               for (var object in objects)
                 objects[object].change_material()
               break;
