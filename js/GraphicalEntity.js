@@ -209,7 +209,7 @@ class Plane extends GraphicalEntity {
 		vertices.push( new THREE.Vector3( 0, 0, 2.5 ) );
 		vertices.push( new THREE.Vector3( 2.5, 0, 2.5 ) );
 		vertices.push( new THREE.Vector3( 0, 0, 5 ) );
-		
+
 		//Lado superior do estabilizador
 		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
 		vertices.push( new THREE.Vector3( 0, 0, 0 ) );
@@ -236,7 +236,7 @@ class Plane extends GraphicalEntity {
 		vertices.push( new THREE.Vector3( 0, 0, -2.5 ) );
 		vertices.push( new THREE.Vector3( 2.5, 0, -2.5 ) );
 		vertices.push( new THREE.Vector3( 0, 0, -5 ) );
-		
+
 		//Lado inferior do estabilizador
 		vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
 		vertices.push( new THREE.Vector3( 0, 0, 0 ) );
@@ -250,7 +250,7 @@ class Plane extends GraphicalEntity {
 		vertices.push( new THREE.Vector3( 0, 0, -2.5 ) );
 		vertices.push( new THREE.Vector3( 0, 0, -5 ) );
 	}
-	
+
     var geometry = constructGeometry(vertices)
 
     // add the different material shading
@@ -266,7 +266,7 @@ class Plane extends GraphicalEntity {
     return horizontal_stabilizer
 
   }
-  
+
   create_vertical_stabilizer(x,y,z) {
     // stabilizer vertices
     var materials = []
@@ -283,7 +283,7 @@ class Plane extends GraphicalEntity {
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 5, 0 ) );
-	
+
 	//Lado esquerdo do estabilizador
 	vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
 	vertices.push( new THREE.Vector3( 0, 0, 0 ) );
@@ -296,7 +296,7 @@ class Plane extends GraphicalEntity {
 	vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 5, 0 ) );
-	
+
     var geometry = constructGeometry(vertices)
 
     // add the different material shading
@@ -325,29 +325,46 @@ class Plane extends GraphicalEntity {
  * Generic Object - basically a decorated THREE.js Object3D
  */
 class Spotlight extends GraphicalEntity {
-  constructor(x, y, z) {
+  constructor(x, y, z,target) {
     super()
-	
-	this.material = new THREE.MeshBasicMaterial({ color: "yellow", wireframe: true });
-	this.name = "spotlight"
-	
-	this.addSpotlightLight(0, -1, 0);
-	this.addSpotlightTop(0, 0, 0);
-	
-	scene.add(this);
-	
-    this.position.x = x;
-    this.position.y = y;
-    this.position.z = z;
+
+    this.enabled=true
+
+  	this.material = new THREE.MeshBasicMaterial({ color: "yellow", wireframe: true });
+  	this.name = "spotlight"
+
+  	this.addSpotlightLight(0, -1, 0);
+  	this.addSpotlightTop(0, 0, 0);
+
+    this.spotLight = new THREE.SpotLight(0xFFFFFF);
+    this.spotLight.position.set(0,0,0);
+    this.spotLight.castShadow = false;
+    this.spotLight.target = target;
+    this.add(this.spotLight);
+
+
+  	scene.add(this);
+
+    this.position.set(x,y,z)
   }
-  
+
+  // enables or disables the light
+  toggle() {
+    if (this.enabled){
+      this.spotLight.intensity = 0.0
+    } else {
+      this.spotLight.intensity = 1.0
+    }
+    this.enabled = !this.enabled
+  }
+
   addSpotlightTop(x, y, z){
 	var geometry = new THREE.ConeGeometry(1, 2,  20, 32);
 	var mesh = new THREE.Mesh(geometry, this.material);
 	mesh.position.set(x, y, z);
 	this.add(mesh);
   }
-  
+
   addSpotlightLight(x, y, z){
 	var geometry = new THREE.SphereGeometry(.5, 32, 32);
 	var mesh = new THREE.Mesh(geometry, this.material);

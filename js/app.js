@@ -20,18 +20,20 @@ function createScene() {
     scene = new THREE.Scene();
 
     addObject(new Plane(0,0,0), "plane");
-	addObject(new Spotlight(10,10,10), "spotlight1");
-	addObject(new Spotlight(-10,10,10), "spotlight2");
-	addObject(new Spotlight(10,10,-10), "spotlight3");
-	addObject(new Spotlight(-10,10,-10), "spotlight4");
+    var plane = objects_named["plane"]
+  	addObject(new Spotlight(15,10,15,plane), "spotlight1");
+  	addObject(new Spotlight(-15,10,15,plane), "spotlight2");
+  	addObject(new Spotlight(15,10,-15,plane), "spotlight3");
+  	addObject(new Spotlight(-15,10,-15,plane), "spotlight4");
 
     scene.add(new THREE.AxisHelper(10));
 
+
     // Temporay just to test stuff
-    var spotLight = new THREE.SpotLight(0xffffff);
+    /*var spotLight = new THREE.SpotLight(0xffffff);
     spotLight.position.set(-40, 60, 10);
     spotLight.castShadow = true;
-    scene.add(spotLight);
+    scene.add(spotLight);*/
 
 
     //addObject(new LengthWall(scaling/2, 0, 0), "front");
@@ -71,65 +73,14 @@ function getObject(name){
 
 
 function createCamera() {
-  camera = new THREE.OrthographicCamera(
-  window.innerWidth / - 2, window.innerWidth / 2,
-    window.innerHeight / 2, window.innerHeight / - 2,
-    -500, 200 );
-    camera.isPerspectiveCamera = false
-    camera.position.x = 1;
-    camera.position.y = 0.3;
-    camera.position.z = 1;
-    camera.lookAt(scene.position);
-    camera.zoom = 4
-  onResize() // update to the scale once
-}
-
-function createCameraPerspective() {
   camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
   camera.isPerspectiveCamera = true
-  camera.position.x = 80;
-  camera.position.y = 80;
-  camera.position.z = 80;
+  camera.position.x = 30;
+  camera.position.y = 30;
+  camera.position.z = 30;
   camera.lookAt(scene.position);
+  onResize() // update to the scale once
 }
-
-
-function createCameraFront() {
-  camera = new THREE.OrthographicCamera(
-    window.innerHeight / 16, window.innerHeight / - 16,
-    -200, 500 );
-    camera.isPerspectiveCamera = false
-    window.innerWidth / - 16, window.innerWidth / 16,
-    camera.position.x = 0;
-    camera.position.y = 0;
-    camera.position.z = 1;
-    camera.lookAt(scene.position);
-}
-function createCameraTop() {
-  camera = new THREE.OrthographicCamera(
-    window.innerWidth / - 16, window.innerWidth / 16,
-    window.innerHeight / 16, window.innerHeight / - 16,
-    -200, 500 );
-  camera.isPerspectiveCamera = false
-  camera.position.x = 0;
-  camera.position.y = 15;
-  camera.position.z = 0;
-  camera.rotation.y = (Math.PI /2)
-  camera.lookAt(scene.position);
-}
-
-function createCameraSide() {
-  camera = new THREE.OrthographicCamera(
-  window.innerWidth / - 16, window.innerWidth / 16,
-    window.innerHeight / 16, window.innerHeight / - 16,
-    -200, 500 );
-  camera.isPerspectiveCamera = false
-  camera.position.x = 1;
-  camera.position.y = 0;
-  camera.position.z = 0;
-  camera.lookAt(scene.position);
-}
-
 function onResize() {
   'use strict';
   var aspect = window.innerWidth / window.innerHeight;
@@ -193,12 +144,16 @@ function onKeyDown(e) {
           case "40": // down
               break;
           case "49": // 1
-              createCameraTop();
+              objects_named["spotlight1"].toggle()
               break;
           case "50": // 2
-              createCameraPerspective();
+              objects_named["spotlight2"].toggle()
               break;
           case "51": // 3
+              objects_named["spotlight3"].toggle()
+              break;
+          case "52": // 4
+              objects_named["spotlight4"].toggle()
               break;
           case "65": //A
               // assuming all submeshes inherit material from parent object
