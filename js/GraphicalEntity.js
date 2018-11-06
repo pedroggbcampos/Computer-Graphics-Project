@@ -43,8 +43,6 @@ class Plane extends GraphicalEntity {
   constructor(x,y,z) {
     super()
 
-    //var wing = this.create_wing(0,0,0)
-    //this.mesh_group.add(wing)
     var fuselage = this.create_fuselage(0,0,0)
     this.mesh_group.add(fuselage)
     var cockpit = this.create_cockpit(0,0,0)
@@ -56,7 +54,6 @@ class Plane extends GraphicalEntity {
   	var vertical_stabilizer = this.create_vertical_stabilizer(0,5,0)
   	this.mesh_group.add(vertical_stabilizer)
 
-
     this.add(this.mesh_group)
     this.position.set(x,y,z)
     this.rotateY(-Math.PI / 2) // put it facing z axis
@@ -65,7 +62,7 @@ class Plane extends GraphicalEntity {
 
   // Plane Rotations
   pitch(value) {
-    this.rotateX(value) // it is rotated on it's own z axis which is the world's x axis
+    this.rotateX(value)
   }
   yaw(value) {
     this.rotateY(value)
@@ -282,7 +279,8 @@ class Plane extends GraphicalEntity {
     // stabilizer vertices
     var materials = []
     var vertices = []
-	//Lado direito do estabilizador
+
+    //Lado direito do estabilizador
     vertices.push( new THREE.Vector3( 0, 0, 0 ) );
     vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
@@ -295,16 +293,16 @@ class Plane extends GraphicalEntity {
     vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 5, 0 ) );
 
-	//Lado esquerdo do estabilizador
-	vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
-	vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+  	//Lado esquerdo do estabilizador
+  	vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+  	vertices.push( new THREE.Vector3( 0, 0, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
 
-	vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
+    vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
 
-	vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
+    vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 5, 0 ) );
 
@@ -341,12 +339,11 @@ class Spotlight extends GraphicalEntity {
   	this.addSpotlightLight(0, -1, 0);
   	this.addSpotlightTop(0, 0, 0);
 
-    this.spotLight = new THREE.SpotLight(0xFFFFFF);
+    this.spotLight = new THREE.PointLight(0xFFFFFF);
     this.spotLight.position.set(0,0,0);
-    this.spotLight.castShadow = false;
+    this.spotLight.castShadow = true
     this.spotLight.target = target;
     this.add(this.spotLight);
-
 
   	scene.add(this);
 
