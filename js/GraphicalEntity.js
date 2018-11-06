@@ -53,6 +53,14 @@ class Plane extends GraphicalEntity {
   	this.mesh_group.add(horizontal_stabilizers2)
   	var vertical_stabilizer = this.create_vertical_stabilizer(0,5,0)
   	this.mesh_group.add(vertical_stabilizer)
+    var wing_left = this.create_wing(0,0,0)
+    this.mesh_group.add(wing_left)
+    var wing_right = this.create_wing(0,0,0)
+    wing_right.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), Math.PI)
+    wing_right.translateY(-4)
+    this.mesh_group.add(wing_right)
+
+
 
     this.add(this.mesh_group)
     this.position.set(x,y,z)
@@ -73,24 +81,55 @@ class Plane extends GraphicalEntity {
     // wing vertices
     var materials = []
     var vertices = []
-    vertices.push( new THREE.Vector3( 5, 0, 0 ) );
-    vertices.push( new THREE.Vector3( 0, 5, 0 ) );
-    vertices.push( new THREE.Vector3( 0, 0, 5 ) );
+    // wing vertices
+    var materials = []
+    var vertices = []
 
-    vertices.push( new THREE.Vector3( 5, 0, 0 ) );
-    vertices.push( new THREE.Vector3( 0, 0, 5 ) );
-    vertices.push( new THREE.Vector3( 5, 0, 5 ) );
+    // first half of wing both faces
+    vertices = vertices.concat(decompose_triangle([
+      new THREE.Vector3( 3, 2, -3),
+      new THREE.Vector3( 3, 2, -15),
+      new THREE.Vector3( 5, 2, -2)]
+    ));
 
-    vertices.push( new THREE.Vector3( 0, 0, 5 ) );
-    vertices.push( new THREE.Vector3( 0, 0, 10 ) );
-    vertices.push( new THREE.Vector3( 5, 0, 10 ) );
+    vertices = vertices.concat(decompose_triangle([
+      new THREE.Vector3( 3, 2, -3),
+      new THREE.Vector3( 3, 2, -15),
+      new THREE.Vector3( 5, 2, -2)]
+    ));
+
+    // second half of wing both faces
+    vertices = vertices.concat(decompose_triangle([
+      new THREE.Vector3( 5, 2, -2),
+      new THREE.Vector3( 5, 2, -15),
+      new THREE.Vector3( 3, 2, -15)]
+    ));
+
+    vertices = vertices.concat(decompose_triangle([
+      new THREE.Vector3( 5, 2, -2),
+      new THREE.Vector3( 5, 2, -15),
+      new THREE.Vector3( 3, 2, -15)]
+    ));
+
+    // tip of wing both faces
+    vertices = vertices.concat(decompose_triangle([
+      new THREE.Vector3( 3, 2, -15),
+      new THREE.Vector3( 5, 2, -15),
+      new THREE.Vector3( 3, 2, -18)]
+    ));
+
+    vertices = vertices.concat(decompose_triangle([
+      new THREE.Vector3( 3, 2, -15),
+      new THREE.Vector3( 5, 2, -15),
+      new THREE.Vector3( 3, 2, -18)]
+    ));
 
     var geometry = constructGeometry(vertices)
 
 
     // add the different material shading
     var wing_color = 0x00cc00;
-    materials.push(new THREE.MeshBasicMaterial( { color : wing_color } ));
+    materials.push(new THREE.MeshBasicMaterial( { color : wing_color , wireframe: true} ));
     materials.push(new THREE.MeshLambertMaterial( { color : wing_color } ));
     materials.push(new THREE.MeshPhongMaterial( { color : wing_color } ));
 
@@ -99,7 +138,6 @@ class Plane extends GraphicalEntity {
 
     wing.position.set(x,y,z)
     return wing
-
   }
 
   create_fuselage(x,y,z) {
