@@ -27,16 +27,6 @@ function createScene() {
   	addObject(new Spotlight(-15,10,-15,plane), "spotlight4");
 
     scene.add(new THREE.AxisHelper(10));
-
-
-    // Temporay just to test stuff
-    /*var spotLight = new THREE.SpotLight(0xffffff);
-    spotLight.position.set(-40, 60, 10);
-    spotLight.castShadow = true;
-    scene.add(spotLight);*/
-
-
-    //addObject(new LengthWall(scaling/2, 0, 0), "front");
 }
 
 
@@ -81,6 +71,7 @@ function createCamera() {
   camera.lookAt(scene.position);
   onResize() // update to the scale once
 }
+
 function onResize() {
   'use strict';
   var aspect = window.innerWidth / window.innerHeight;
