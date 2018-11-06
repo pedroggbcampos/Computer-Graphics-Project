@@ -43,22 +43,23 @@ class Plane extends GraphicalEntity {
   constructor(x,y,z) {
     super()
 
-    var fuselage = this.create_fuselage(0,0,0)
+    var fuselage = this.create_fuselage(-4,-1,0)
     this.mesh_group.add(fuselage)
-    var cockpit = this.create_cockpit(0,0,0)
+    var cockpit = this.create_cockpit(-4,-1,0)
     this.mesh_group.add(cockpit)
-  	var horizontal_stabilizers1 = this.create_horizontal_stabilizers(0,5,0,"right")
+  	var horizontal_stabilizers1 = this.create_horizontal_stabilizers(-4,4,0,"right")
   	this.mesh_group.add(horizontal_stabilizers1)
-  	var horizontal_stabilizers2 = this.create_horizontal_stabilizers(0,5,0,"left")
+  	var horizontal_stabilizers2 = this.create_horizontal_stabilizers(-4,4,0,"left")
   	this.mesh_group.add(horizontal_stabilizers2)
-  	var vertical_stabilizer = this.create_vertical_stabilizer(0,5,0)
+  	var vertical_stabilizer = this.create_vertical_stabilizer(-4,4,0)
   	this.mesh_group.add(vertical_stabilizer)
-    var wing_left = this.create_wing(0,0,0)
+    var wing_left = this.create_wing(-4,-1,0)
     this.mesh_group.add(wing_left)
-    var wing_right = this.create_wing(0,0,0)
+    var wing_right = this.create_wing(-4,-1,0)
     wing_right.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), Math.PI)
     wing_right.translateY(-4)
     this.mesh_group.add(wing_right)
+    this.mesh_group.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), Math.PI/35)
 
 
 
@@ -70,10 +71,10 @@ class Plane extends GraphicalEntity {
 
   // Plane Rotations
   pitch(value) {
-    this.rotateX(value)
+    this.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), value)
   }
   yaw(value) {
-    this.rotateY(value)
+    this.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), value)
   }
 
 

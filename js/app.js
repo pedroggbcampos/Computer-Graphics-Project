@@ -23,8 +23,8 @@ function createScene() {
     var plane = objects_named["plane"]
   	addObject(new Spotlight(15,10,15,plane), "spotlight1");
   	addObject(new Spotlight(-15,10,15,plane), "spotlight2");
-  	addObject(new Spotlight(15,10,-15,plane), "spotlight3");
-  	addObject(new Spotlight(-15,10,-15,plane), "spotlight4");
+  	addObject(new Spotlight(-15,10,-15,plane), "spotlight3");
+    addObject(new Spotlight(15,10,-15,plane), "spotlight4");
 
     scene.add(new THREE.AxisHelper(10));
 
