@@ -27,6 +27,7 @@ function createScene() {
   	addObject(new Spotlight(-15,10,-15,plane), "spotlight4");
 
     scene.add(new THREE.AxisHelper(10));
+
 }
 
 
@@ -113,9 +114,8 @@ function onKeyUp(e) {
 
 function onKeyDown(e) {
     'use strict';
-
+    var plane = objects_named["plane"];
     // getting the objects
-
     keys_pressed[e.keyCode]=true
     for (var key in keys_pressed) {
       if (!keys_pressed[key]) continue;
@@ -127,12 +127,16 @@ function onKeyDown(e) {
                 objects[object].change_material()
               break;
           case "37": // left
+              plane.yaw(delta)
               break;
           case "38": // up
+              plane.pitch(delta)
               break;
           case "39": // right
+              plane.yaw(-delta)
               break;
           case "40": // down
+              plane.pitch(-delta)
               break;
           case "49": // 1
               objects_named["spotlight1"].toggle()

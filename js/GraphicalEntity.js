@@ -12,6 +12,7 @@ class GraphicalEntity extends THREE.Object3D {
     this.materials = [] // stores the list of materials with different shadings
     this.current_material_index = 0
     this.num_materials = 3
+    this.update_queue = []
 
     // group of meshes
     this.mesh_group = new THREE.Group();
@@ -48,18 +49,28 @@ class Plane extends GraphicalEntity {
     this.mesh_group.add(fuselage)
     var cockpit = this.create_cockpit(0,0,0)
     this.mesh_group.add(cockpit)
-	var horizontal_stabilizers1 = this.create_horizontal_stabilizers(0,5,0,"right")
-	this.mesh_group.add(horizontal_stabilizers1)
-	var horizontal_stabilizers2 = this.create_horizontal_stabilizers(0,5,0,"left")
-	this.mesh_group.add(horizontal_stabilizers2)
-	var vertical_stabilizer = this.create_vertical_stabilizer(0,5,0)
-	this.mesh_group.add(vertical_stabilizer)
+  	var horizontal_stabilizers1 = this.create_horizontal_stabilizers(0,5,0,"right")
+  	this.mesh_group.add(horizontal_stabilizers1)
+  	var horizontal_stabilizers2 = this.create_horizontal_stabilizers(0,5,0,"left")
+  	this.mesh_group.add(horizontal_stabilizers2)
+  	var vertical_stabilizer = this.create_vertical_stabilizer(0,5,0)
+  	this.mesh_group.add(vertical_stabilizer)
 
 
     this.add(this.mesh_group)
     this.position.set(x,y,z)
+    this.rotateY(-Math.PI / 2) // put it facing z axis
     scene.add(this)
   }
+
+  // Plane Rotations
+  pitch(value) {
+    this.rotateX(value) // it is rotated on it's own z axis which is the world's x axis
+  }
+  yaw(value) {
+    this.rotateY(value)
+  }
+
 
   create_wing(x,y,z) {
     // wing vertices
@@ -311,12 +322,6 @@ class Plane extends GraphicalEntity {
     vertical_stabilizer.position.set(x,y,z)
     return vertical_stabilizer
 
-  }
-
-  // update function is called to update the object
-  update(delta) {
-    // rotate just to show off
-    this.rotation.y = this.rotation.y + delta/2
   }
 
 }
