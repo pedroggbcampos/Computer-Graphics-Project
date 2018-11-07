@@ -378,7 +378,7 @@ class Spotlight extends GraphicalEntity {
   	this.addSpotlightLight(0, -1, 0);
   	this.addSpotlightTop(0, 0, 0);
 
-    this.spotLight = new THREE.PointLight(0xFFFFFF);
+    this.spotLight = new THREE.SpotLight(0xFFFFFF);
     this.spotLight.position.set(0,0,0);
     this.spotLight.castShadow = true
     this.spotLight.target = target;
@@ -399,7 +399,7 @@ class Spotlight extends GraphicalEntity {
     if (this.enabled){
       this.spotLight.intensity = 0.0
     } else {
-      this.spotLight.intensity = 1.0
+      this.spotLight.intensity = 0.8
     }
     this.enabled = !this.enabled
   }
@@ -416,5 +416,32 @@ class Spotlight extends GraphicalEntity {
 	var mesh = new THREE.Mesh(geometry, this.material);
 	mesh.position.set(x, y, z);
 	this.add(mesh);
+  }
+}
+
+class Ambientlight extends GraphicalEntity {
+  constructor(intensity) {
+    super()
+
+    this.enabled=true
+
+  	this.name = "ambientlight"
+    this.intensity = intensity
+
+    this.ambientLight = new THREE.AmbientLight( 0x404040 );
+    this.ambientLight.intensity = this.intensity
+    this.add(this.ambientLight);
+
+  	scene.add(this);
+  }
+
+  // enables or disables the light
+  toggle() {
+    if (this.enabled){
+      this.ambientLight.intensity = this.intensity/10
+    } else {
+      this.ambientLight.intensity = this.intensity
+    }
+    this.enabled = !this.enabled
   }
 }

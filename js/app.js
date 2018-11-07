@@ -25,6 +25,7 @@ function createScene() {
   	addObject(new Spotlight(-15,10,15,plane), "spotlight2");
   	addObject(new Spotlight(-15,10,-15,plane), "spotlight3");
     addObject(new Spotlight(15,10,-15,plane), "spotlight4");
+    addObject(new Ambientlight(2.5), "ambientlight");
 
     scene.add(new THREE.AxisHelper(10));
 
@@ -120,8 +121,6 @@ function onKeyDown(e) {
     for (var key in keys_pressed) {
       if (!keys_pressed[key]) continue;
       switch (key) {
-          case "66": //B
-              break;
           case "71": //G
               for (var object in objects)
                 objects[object].change_material()
@@ -160,8 +159,10 @@ function onKeyDown(e) {
                 // TODO add possibility for objects to have different materials
                 objects[object].material.wireframe = !objects[object].material.wireframe;
               break;
-          case "69": //E
+          case "78": //N
+              objects_named["ambientlight"].toggle()
               break;
+
           case "80": //P - pauses the game
               pause = !pause;
               break;
