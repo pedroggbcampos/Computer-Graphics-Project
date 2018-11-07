@@ -140,15 +140,19 @@ function onKeyDown(e) {
               break;
           case "49": // 1
               objects_named["spotlight1"].toggle()
+              objects_named["spotlight1"].visible = !objects_named["spotlight1"].visible
               break;
           case "50": // 2
               objects_named["spotlight2"].toggle()
+              objects_named["spotlight2"].visible = !objects_named["spotlight2"].visible
               break;
           case "51": // 3
               objects_named["spotlight3"].toggle()
+              objects_named["spotlight3"].visible = !objects_named["spotlight3"].visible
               break;
           case "52": // 4
               objects_named["spotlight4"].toggle()
+              objects_named["spotlight4"].visible = !objects_named["spotlight4"].visible
               break;
           case "65": //A
               // assuming all submeshes inherit material from parent object

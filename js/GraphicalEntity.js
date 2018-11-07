@@ -71,10 +71,10 @@ class Plane extends GraphicalEntity {
 
   // Plane Rotations
   pitch(value) {
-    this.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), value)
+    this.rotateZ(value)
   }
   yaw(value) {
-    this.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), value)
+    this.rotateY(value)
   }
 
 
@@ -387,6 +387,11 @@ class Spotlight extends GraphicalEntity {
   	scene.add(this);
 
     this.position.set(x,y,z)
+    var direction = new THREE.Vector3(0, 0, 0)
+    direction.sub(this.position)
+    direction.setY(500)
+    this.lookAt(direction)
+
   }
 
   // enables or disables the light
