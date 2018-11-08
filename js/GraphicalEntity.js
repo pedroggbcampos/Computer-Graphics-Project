@@ -77,43 +77,43 @@ class Plane extends GraphicalEntity {
     var vertices = []
 
     // first half of wing both faces
-    vertices = vertices.concat(decompose_triangle([
+    vertices = vertices.concat([
       new THREE.Vector3( 3, 2, -3),
       new THREE.Vector3( 3, 2, -15),
       new THREE.Vector3( 5, 2, -2)]
-    ));
+    );
 
-    vertices = vertices.concat(decompose_triangle([
+    vertices = vertices.concat([
       new THREE.Vector3( 3, 2, -3),
       new THREE.Vector3( 3, 2, -15),
       new THREE.Vector3( 5, 2, -2)]
-    ));
+    );
 
     // second half of wing both faces
-    vertices = vertices.concat(decompose_triangle([
+    vertices = vertices.concat([
       new THREE.Vector3( 5, 2, -2),
       new THREE.Vector3( 5, 2, -15),
       new THREE.Vector3( 3, 2, -15)]
-    ));
+    );
 
-    vertices = vertices.concat(decompose_triangle([
+    vertices = vertices.concat([
       new THREE.Vector3( 5, 2, -2),
       new THREE.Vector3( 5, 2, -15),
       new THREE.Vector3( 3, 2, -15)]
-    ));
+    );
 
     // tip of wing both faces
-    vertices = vertices.concat(decompose_triangle([
+    vertices = vertices.concat([
       new THREE.Vector3( 3, 2, -15),
       new THREE.Vector3( 5, 2, -15),
       new THREE.Vector3( 3, 2, -18)]
-    ));
+    );
 
-    vertices = vertices.concat(decompose_triangle([
+    vertices = vertices.concat([
       new THREE.Vector3( 3, 2, -15),
       new THREE.Vector3( 5, 2, -15),
       new THREE.Vector3( 3, 2, -18)]
-    ));
+    );
 
     var geometry = constructGeometry(vertices)
 
