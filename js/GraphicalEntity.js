@@ -87,39 +87,39 @@ class Plane extends GraphicalEntity {
     var vertices = []
 
     // first half of wing both faces
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( 3, 2, -3),
       new THREE.Vector3( 3, 2, -15),
       new THREE.Vector3( 5, 2, -2)]
     ));
 
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( 3, 2, -3),
       new THREE.Vector3( 3, 2, -15),
       new THREE.Vector3( 5, 2, -2)]
     ));
 
     // second half of wing both faces
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( 5, 2, -2),
       new THREE.Vector3( 5, 2, -15),
       new THREE.Vector3( 3, 2, -15)]
     ));
 
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( 5, 2, -2),
       new THREE.Vector3( 5, 2, -15),
       new THREE.Vector3( 3, 2, -15)]
     ));
 
     // tip of wing both faces
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( 3, 2, -15),
       new THREE.Vector3( 5, 2, -15),
       new THREE.Vector3( 3, 2, -18)]
     ));
 
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( 3, 2, -15),
       new THREE.Vector3( 5, 2, -15),
       new THREE.Vector3( 3, 2, -18)]
@@ -147,37 +147,37 @@ class Plane extends GraphicalEntity {
     var vertices = []
 
     // base front
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( 15, 0, 0),
       new THREE.Vector3( 0, 0, 7.5 ),
       new THREE.Vector3( 0, 0, -7.5)]
     ));
     // base back
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( -2, 0, 0 ),
       new THREE.Vector3( 0, 0, -7.5 ),
       new THREE.Vector3( 0, 0, 7.5 )]
     ));
     // front right
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( 15, 0, 0 ),
       new THREE.Vector3( 0, 0, -7.5 ),
       new THREE.Vector3( 0, 5, 0 )]
     ));
     // front left
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( 15, 0, 0),
       new THREE.Vector3( 0, 5, 0),
       new THREE.Vector3( 0, 0, 7.5)]
     ))
     // back right
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( -2, 0, 0 ),
       new THREE.Vector3( 0, 5, 0 ),
       new THREE.Vector3( 0, 0, -7.5 )]
     ));
     // back left
-    vertices = vertices.concat(decompose([
+    vertices = vertices.concat(decompose_triangle([
       new THREE.Vector3( -2, 0, 0 ),
       new THREE.Vector3( 0, 0, 7.5 ),
       new THREE.Vector3( 0, 5, 0 )]
