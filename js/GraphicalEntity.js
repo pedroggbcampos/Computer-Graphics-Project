@@ -12,6 +12,7 @@ class GraphicalEntity extends THREE.Object3D {
     this.materials = [] // stores the list of materials with different shadings
     this.current_material_index = 0
     this.num_materials = 3
+    this.update_queue = []
 
     // group of meshes
     this.mesh_group = new THREE.Group();
@@ -42,31 +43,40 @@ class Plane extends GraphicalEntity {
   constructor(x,y,z) {
     super()
 
-    //var wing = this.create_wing(0,0,0)
-    //this.mesh_group.add(wing)
-    var fuselage = this.create_fuselage(0,0,0)
+    var fuselage = this.create_fuselage(-4,-1,0)
     this.mesh_group.add(fuselage)
-    var cockpit = this.create_cockpit(0,0,0)
+    var cockpit = this.create_cockpit(-4,-1,0)
     this.mesh_group.add(cockpit)
-	  var horizontal_stabilizers1 = this.create_horizontal_stabilizers(0,5,0,"right")
+  	var horizontal_stabilizers1 = this.create_horizontal_stabilizers(-4,4,0,"right")
   	this.mesh_group.add(horizontal_stabilizers1)
-  	var horizontal_stabilizers2 = this.create_horizontal_stabilizers(0,5,0,"left")
+  	var horizontal_stabilizers2 = this.create_horizontal_stabilizers(-4,4,0,"left")
   	this.mesh_group.add(horizontal_stabilizers2)
-  	var vertical_stabilizer = this.create_vertical_stabilizer(0,5,0)
+  	var vertical_stabilizer = this.create_vertical_stabilizer(-4,4,0)
   	this.mesh_group.add(vertical_stabilizer)
-    var wing_left = this.create_wing(0,0,0)
+    var wing_left = this.create_wing(-4,-1,0)
     this.mesh_group.add(wing_left)
-    var wing_right = this.create_wing(0,0,0)
+    var wing_right = this.create_wing(-4,-1,0)
     wing_right.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), Math.PI)
     wing_right.translateY(-4)
     this.mesh_group.add(wing_right)
+    this.mesh_group.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), Math.PI/35)
 
 
 
     this.add(this.mesh_group)
     this.position.set(x,y,z)
+    this.rotateY(-Math.PI / 2) // put it facing z axis
     scene.add(this)
   }
+
+  // Plane Rotations
+  pitch(value) {
+    this.rotateZ(value)
+  }
+  yaw(value) {
+    this.rotateY(value)
+  }
+
 
   create_wing(x,y,z) {
     // wing vertices
@@ -308,7 +318,8 @@ class Plane extends GraphicalEntity {
     // stabilizer vertices
     var materials = []
     var vertices = []
-	//Lado direito do estabilizador
+
+    //Lado direito do estabilizador
     vertices.push( new THREE.Vector3( 0, 0, 0 ) );
     vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
@@ -321,16 +332,16 @@ class Plane extends GraphicalEntity {
     vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 5, 0 ) );
 
-	//Lado esquerdo do estabilizador
-	  vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
-	  vertices.push( new THREE.Vector3( 0, 0, 0 ) );
+  	//Lado esquerdo do estabilizador
+  	vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
+  	vertices.push( new THREE.Vector3( 0, 0, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
 
-	  vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
+    vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 2.5, 0, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
 
-	  vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
+    vertices.push( new THREE.Vector3( 2.5, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 2.5, 0 ) );
     vertices.push( new THREE.Vector3( 0, 5, 0 ) );
 
@@ -350,10 +361,87 @@ class Plane extends GraphicalEntity {
 
   }
 
-  // update function is called to update the object
-  update(delta) {
-    // rotate just to show off
-    this.rotation.y = this.rotation.y + delta/2
+}
+
+/**
+ * Generic Object - basically a decorated THREE.js Object3D
+ */
+class Spotlight extends GraphicalEntity {
+  constructor(x, y, z,target) {
+    super()
+
+    this.enabled=true
+
+  	this.material = new THREE.MeshBasicMaterial({ color: "yellow", wireframe: true });
+  	this.name = "spotlight"
+
+  	this.addSpotlightLight(0, -1, 0);
+  	this.addSpotlightTop(0, 0, 0);
+
+    this.spotLight = new THREE.SpotLight(0xFFFFFF);
+    this.spotLight.position.set(0,0,0);
+    this.spotLight.castShadow = true
+    this.spotLight.target = target;
+    this.add(this.spotLight);
+
+  	scene.add(this);
+
+    this.position.set(x,y,z)
+    var direction = new THREE.Vector3(0, 0, 0)
+    direction.sub(this.position)
+    direction.setY(500)
+    this.lookAt(direction)
+
   }
 
+  // enables or disables the light
+  toggle() {
+    if (this.enabled){
+      this.spotLight.intensity = 0.0
+    } else {
+      this.spotLight.intensity = 0.8
+    }
+    this.enabled = !this.enabled
+  }
+
+  addSpotlightTop(x, y, z){
+	var geometry = new THREE.ConeGeometry(1, 2,  20, 32);
+	var mesh = new THREE.Mesh(geometry, this.material);
+	mesh.position.set(x, y, z);
+	this.add(mesh);
+  }
+
+  addSpotlightLight(x, y, z){
+	var geometry = new THREE.SphereGeometry(.5, 32, 32);
+	var mesh = new THREE.Mesh(geometry, this.material);
+	mesh.position.set(x, y, z);
+	this.add(mesh);
+  }
+}
+
+class Ambientlight extends GraphicalEntity {
+  constructor(intensity) {
+    super()
+
+    this.enabled=true
+
+  	this.name = "ambientlight"
+    this.intensity = intensity
+
+    this.ambientLight = new THREE.AmbientLight( 0x404040 );
+    this.ambientLight.intensity = this.intensity
+    this.add(this.ambientLight);
+
+  	scene.add(this);
+  }
+
+  // enables or disables the light
+  toggle() {
+    if (this.enabled){
+      this.ambientLight.intensity = this.intensity/10
+    } else {
+      this.ambientLight.intensity = this.intensity
+    }
+    this.enabled = !this.enabled
+  }
 }

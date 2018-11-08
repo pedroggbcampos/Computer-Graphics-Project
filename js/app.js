@@ -20,17 +20,15 @@ function createScene() {
     scene = new THREE.Scene();
 
     addObject(new Plane(0,0,0), "plane");
+    var plane = objects_named["plane"]
+  	addObject(new Spotlight(15,10,15,plane), "spotlight1");
+  	addObject(new Spotlight(-15,10,15,plane), "spotlight2");
+  	addObject(new Spotlight(-15,10,-15,plane), "spotlight3");
+    addObject(new Spotlight(15,10,-15,plane), "spotlight4");
+    addObject(new Ambientlight(2.5), "ambientlight");
 
     scene.add(new THREE.AxisHelper(10));
 
-    // Temporay just to test stuff
-    var spotLight = new THREE.SpotLight(0xffffff);
-    spotLight.position.set(-40, 60, 10);
-    spotLight.castShadow = true;
-    scene.add(spotLight);
-
-
-    //addObject(new LengthWall(scaling/2, 0, 0), "front");
 }
 
 
@@ -67,63 +65,13 @@ function getObject(name){
 
 
 function createCamera() {
-  camera = new THREE.OrthographicCamera(
-  window.innerWidth / - 2, window.innerWidth / 2,
-    window.innerHeight / 2, window.innerHeight / - 2,
-    -500, 200 );
-    camera.isPerspectiveCamera = false
-    camera.position.x = 1;
-    camera.position.y = 0.3;
-    camera.position.z = 1;
-    camera.lookAt(scene.position);
-    camera.zoom = 4
-  onResize() // update to the scale once
-}
-
-function createCameraPerspective() {
   camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
   camera.isPerspectiveCamera = true
-  camera.position.x = 80;
-  camera.position.y = 80;
-  camera.position.z = 80;
+  camera.position.x = 30;
+  camera.position.y = 30;
+  camera.position.z = 30;
   camera.lookAt(scene.position);
-}
-
-
-function createCameraFront() {
-  camera = new THREE.OrthographicCamera(
-    window.innerHeight / 16, window.innerHeight / - 16,
-    -200, 500 );
-    camera.isPerspectiveCamera = false
-    window.innerWidth / - 16, window.innerWidth / 16,
-    camera.position.x = 0;
-    camera.position.y = 0;
-    camera.position.z = 1;
-    camera.lookAt(scene.position);
-}
-function createCameraTop() {
-  camera = new THREE.OrthographicCamera(
-    window.innerWidth / - 16, window.innerWidth / 16,
-    window.innerHeight / 16, window.innerHeight / - 16,
-    -200, 500 );
-  camera.isPerspectiveCamera = false
-  camera.position.x = 0;
-  camera.position.y = 15;
-  camera.position.z = 0;
-  camera.rotation.y = (Math.PI /2)
-  camera.lookAt(scene.position);
-}
-
-function createCameraSide() {
-  camera = new THREE.OrthographicCamera(
-  window.innerWidth / - 16, window.innerWidth / 16,
-    window.innerHeight / 16, window.innerHeight / - 16,
-    -200, 500 );
-  camera.isPerspectiveCamera = false
-  camera.position.x = 1;
-  camera.position.y = 0;
-  camera.position.z = 0;
-  camera.lookAt(scene.position);
+  onResize() // update to the scale once
 }
 
 function onResize() {
@@ -167,34 +115,43 @@ function onKeyUp(e) {
 
 function onKeyDown(e) {
     'use strict';
-
+    var plane = objects_named["plane"];
     // getting the objects
-
     keys_pressed[e.keyCode]=true
     for (var key in keys_pressed) {
       if (!keys_pressed[key]) continue;
       switch (key) {
-          case "66": //B
-              break;
           case "71": //G
               for (var object in objects)
                 objects[object].change_material()
               break;
           case "37": // left
+              plane.yaw(delta)
               break;
           case "38": // up
+              plane.pitch(delta)
               break;
           case "39": // right
+              plane.yaw(-delta)
               break;
           case "40": // down
+              plane.pitch(-delta)
               break;
           case "49": // 1
-              createCameraTop();
+              objects_named["spotlight1"].toggle()
+              objects_named["spotlight1"].visible = !objects_named["spotlight1"].visible
               break;
           case "50": // 2
-              createCameraPerspective();
+              objects_named["spotlight2"].toggle()
+              objects_named["spotlight2"].visible = !objects_named["spotlight2"].visible
               break;
           case "51": // 3
+              objects_named["spotlight3"].toggle()
+              objects_named["spotlight3"].visible = !objects_named["spotlight3"].visible
+              break;
+          case "52": // 4
+              objects_named["spotlight4"].toggle()
+              objects_named["spotlight4"].visible = !objects_named["spotlight4"].visible
               break;
           case "65": //A
               // assuming all submeshes inherit material from parent object
@@ -202,8 +159,10 @@ function onKeyDown(e) {
                 // TODO add possibility for objects to have different materials
                 objects[object].material.wireframe = !objects[object].material.wireframe;
               break;
-          case "69": //E
+          case "78": //N
+              objects_named["ambientlight"].toggle()
               break;
+
           case "80": //P - pauses the game
               pause = !pause;
               break;
