@@ -5,7 +5,7 @@ var num_balls = 10;
 var scaling = 50;
 var delta = 1;
 var pause = false;
-
+var flagL = false
 
 var keys_pressed = {}; // stores the keys pressed
 var objects = []; // Objects in the scene
@@ -52,7 +52,7 @@ function addObject(object, name, colidable){
 /**
  * Gets an object of a specified name
  * @param {string} name - Name the object we want
- * @return {SceneObject} object - The Object being retrieved
+ * @return {SceneObject} object -d The Object being retrieved
  */
 function getObject(name){
   if (objects_named[name] !== "undefined") {
@@ -164,10 +164,10 @@ function onKeyDown(e) {
           case "78": //N
               objects_named["ambientlight"].toggle()
               break;
-		  case "76": //L
-			  for (var object in objects)
-				  objects[object].change_calc()
-			  break;
+          case "76": //L
+              flagL = !flagL
+			        plane.change_calc();
+    			    break;
           case "80": //P - pauses the game
               pause = !pause;
               break;

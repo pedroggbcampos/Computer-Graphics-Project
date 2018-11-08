@@ -34,18 +34,23 @@ class GraphicalEntity extends THREE.Object3D {
     });
 
   }
-  
-  change_calc() {
-    this.mesh_group.traverse(function (node) {
-      if (node instanceof THREE.Mesh) {
-		  console.log(node.material)
-		  if(node.material.lights == false)
-            node.material.lights = true;
-		  else
-		    node.material.lights = false;
-      }
-    });
 
+  change_calc() {
+    if (flagL){
+      this.mesh_group.traverse(function (node) {
+        if (node instanceof THREE.Mesh) {
+          node.material = node.materials[0];
+        }
+      });
+    }
+    else{
+      var material_index = this.current_material_index
+      this.mesh_group.traverse(function (node) {
+        if (node instanceof THREE.Mesh) {
+          node.material = node.materials[material_index];
+        }
+      });
+    }
   }
 
 }
