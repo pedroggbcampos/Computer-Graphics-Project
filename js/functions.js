@@ -42,7 +42,7 @@ function constructGeometry(vertices) {
  *     | /
  *     |/ (a)
  **/
-function decompose_triangle(vertices, path=""){
+function decompose_triangle(vertices, level=0){
   var num_vertices = vertices.length
   var result = vertices
 
@@ -78,7 +78,7 @@ function decompose_triangle(vertices, path=""){
 
   // goes through all the edges until it finds one with bigger lenght than permitterd
   for (var i=0; i < 3; i++) {
-    console.log(path, " with distance ",vertices[edge1].distanceTo(vertices[edge2]))
+    console.log(level, " with distance ",vertices[edge1].distanceTo(vertices[edge2]))
     if (vertices[edge1].distanceTo(vertices[edge2]) > ALLOWED_POLY_LENGTH) {
       var a = vertices[edge1]
       var b = vertices[edge2]
@@ -90,8 +90,8 @@ function decompose_triangle(vertices, path=""){
       var d = a.clone()
       d = d.add(ab)
 
-      var triangle1 = decompose_triangle([a, d, c],path+"1")
-      var triangle2 = decompose_triangle([d, b, c], path+"2")
+      var triangle1 = decompose_triangle([a, d, c],level+1)
+      var triangle2 = decompose_triangle([d, b, c], level+1)
 
       result = triangle1.concat(triangle2)
       break
@@ -101,4 +101,17 @@ function decompose_triangle(vertices, path=""){
     edge3 = (edge1+3)%3
   }
   return result
+}
+// decompose triangle decorator
+// adds functionality
+function decompose(vertices, enabled=false){
+  if (!enabled) return vertices
+  var verts = decompose_triangle(vertices)
+  var len = vertices.length
+  var tmp = verts[length-2]
+  verts[length-2] = verts[length-1]
+  verts[length-1] = tmp
+
+  return verts
+
 }
