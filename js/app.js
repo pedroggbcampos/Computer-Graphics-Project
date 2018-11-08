@@ -121,6 +121,8 @@ function onKeyDown(e) {
     for (var key in keys_pressed) {
       if (!keys_pressed[key]) continue;
       switch (key) {
+        case "70": //F
+            break;
           case "71": //G
               for (var object in objects)
                 objects[object].change_material()

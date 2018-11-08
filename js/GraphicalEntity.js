@@ -139,7 +139,7 @@ class Plane extends GraphicalEntity {
 
     // add the different material shading
     var wing_color = 0x00cc00;
-    materials.push(new THREE.MeshBasicMaterial( { color : wing_color , wireframe: true} ));
+    materials.push(new THREE.MeshBasicMaterial( { color : wing_color} ));
     materials.push(new THREE.MeshLambertMaterial( { color : wing_color} ));
     materials.push(new THREE.MeshPhongMaterial( { color : wing_color, shininess: 140 } ));
 
@@ -199,7 +199,7 @@ class Plane extends GraphicalEntity {
 
     // add the different material shading
     var wing_color = 0x00cc00;
-    materials.push(new THREE.MeshBasicMaterial( { color : wing_color , wireframe: true} ));
+    materials.push(new THREE.MeshBasicMaterial( { color : wing_color} ));
     materials.push(new THREE.MeshLambertMaterial( { color : wing_color } ));
     materials.push(new THREE.MeshPhongMaterial( { color : wing_color, shininess: 140  } ));
 
@@ -315,10 +315,10 @@ class Plane extends GraphicalEntity {
     var geometry = constructGeometry(vertices, normals)
 
     // add the different material shading
-    var horizontal_stabilizer_color = 0xff00ff;
+    var horizontal_stabilizer_color = 0xee00ee;
     materials.push(new THREE.MeshBasicMaterial( { color : horizontal_stabilizer_color } ));
     materials.push(new THREE.MeshLambertMaterial( { color : horizontal_stabilizer_color } ));
-    materials.push(new THREE.MeshPhongMaterial( { color : horizontal_stabilizer_color } ));
+    materials.push(new THREE.MeshPhongMaterial( { color : horizontal_stabilizer_color, shininess: 140  } ));
 
     var horizontal_stabilizer = new THREE.Mesh(geometry, materials[0])
     horizontal_stabilizer.materials = materials
@@ -364,10 +364,10 @@ class Plane extends GraphicalEntity {
     var geometry = constructGeometry(vertices, normals)
 
     // add the different material shading
-    var vertical_stabilizer_color = 0xff0000;
+    var vertical_stabilizer_color = 0xee0000;
     materials.push(new THREE.MeshBasicMaterial( { color : vertical_stabilizer_color } ));
     materials.push(new THREE.MeshLambertMaterial( { color : vertical_stabilizer_color } ));
-    materials.push(new THREE.MeshPhongMaterial( { color : vertical_stabilizer_color } ));
+    materials.push(new THREE.MeshPhongMaterial( { color : vertical_stabilizer_color, shininess: 140  } ));
 
     var vertical_stabilizer = new THREE.Mesh(geometry, materials[0])
     vertical_stabilizer.materials = materials
@@ -388,7 +388,7 @@ class Spotlight extends GraphicalEntity {
 
     this.enabled=true
 
-  	this.material = new THREE.MeshBasicMaterial({ color: "yellow", wireframe: true });
+  	this.material = new THREE.MeshBasicMaterial({ color: "yellow"});
   	this.name = "spotlight"
 
   	this.addSpotlightLight(0, -1, 0);
