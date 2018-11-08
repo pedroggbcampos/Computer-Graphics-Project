@@ -34,6 +34,19 @@ class GraphicalEntity extends THREE.Object3D {
     });
 
   }
+  
+  change_calc() {
+    this.mesh_group.traverse(function (node) {
+      if (node instanceof THREE.Mesh) {
+		  console.log(node.material)
+		  if(node.material.lights == false)
+            node.material.lights = true;
+		  else
+		    node.material.lights = false;
+      }
+    });
+
+  }
 
 }
 /**
@@ -79,9 +92,6 @@ class Plane extends GraphicalEntity {
 
 
   create_wing(x,y,z) {
-    // wing vertices
-    var materials = []
-    var vertices = []
     // wing vertices
     var materials = []
     var vertices = []

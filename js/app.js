@@ -164,7 +164,10 @@ function onKeyDown(e) {
           case "78": //N
               objects_named["ambientlight"].toggle()
               break;
-
+		  case "76": //L
+			  for (var object in objects)
+				  objects[object].change_calc()
+			  break;
           case "80": //P - pauses the game
               pause = !pause;
               break;
