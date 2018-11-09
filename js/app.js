@@ -158,8 +158,10 @@ function onKeyDown(e) {
           case "65": //A
               // assuming all submeshes inherit material from parent object
               for (var object in objects)
+              console.log(objects[object])
                 // TODO add possibility for objects to have different materials
-                objects[object].material.wireframe = !objects[object].material.wireframe;
+                objects[object].material = new THREE.MeshBasicMaterial({ wireframe: true});
+
               break;
           case "78": //N
               objects_named["ambientlight"].toggle()

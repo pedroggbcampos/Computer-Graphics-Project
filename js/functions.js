@@ -113,11 +113,6 @@ function decompose(vertices, level=0){
 function decompose_triangle(vertices, enabled=false){
   if (!enabled) return vertices
   var verts = decompose(vertices)
-  var len = vertices.length
-  var tmp = verts[length-2]
-  verts[length-2] = verts[length-1]
-  verts[length-1] = tmp
-
   return verts
 
 }

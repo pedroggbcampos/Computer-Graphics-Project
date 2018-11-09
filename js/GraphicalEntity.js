@@ -430,7 +430,7 @@ class Spotlight extends GraphicalEntity {
     if (this.enabled){
       this.spotLight.intensity = 0.0
     } else {
-      this.spotLight.intensity = 0.8
+      this.spotLight.intensity = 1
     }
     this.enabled = !this.enabled
   }
