@@ -1,14 +1,19 @@
 # todo list
 
+## Centeno
+* cubo
+* reset
+* pause (tecla)
 
 ## Fields
-* add axis
+* luz direcional
+* luz pontual
+* tabuleiro
+* wireframe
 
 ## Noiserv
-* [Field]
+* bola
+* movimento bola
+* câmara c orbitControls
 
 ## Bugs to Fix
-* [ ] Support more materials per object
-* [ ] add velocity on rotation (deltat)
-* [ ] object groupings
-* [ ] resize window (m)
