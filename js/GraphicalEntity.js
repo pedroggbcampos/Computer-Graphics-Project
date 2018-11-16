@@ -134,6 +134,19 @@ class Camera extends GraphicalEntity {
   }
 }
 
+/*
+ *
+ */
+class BoardLight extends GraphicalEntity {
+  constructor(x,y,z) {
+    super()
+    var light = new THREE.PointLight( 0xff0000, 1, 100, 1 );
+    this.add(light)
+    this.position.set(x,y,z)
+    scene.add(this);
+  }
+}
+
 class Ambientlight extends GraphicalEntity {
   constructor(intensity) {
     super()

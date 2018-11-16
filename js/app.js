@@ -20,6 +20,7 @@ function createScene() {
     scene = new THREE.Scene();
 
     addObject(new ChessBoard(0,0,0), "board");
+    addObject(new BoardLight( 2*Math.sqrt(2)*20, 4, 2*Math.sqrt(2)*20), "boardLight");
 
     scene.add(new THREE.AxisHelper(10));
 
