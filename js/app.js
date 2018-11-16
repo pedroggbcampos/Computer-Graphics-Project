@@ -156,7 +156,7 @@ function onKeyDown(e) {
                 // TODO add possibility for objects to have different materials
                 objects[object].material = new THREE.MeshBasicMaterial({ wireframe: true});
     			    break;
-          case "80": //P - pauses the game
+          case "83": //S - pauses the game
               pause = !pause;
               break;
       }
