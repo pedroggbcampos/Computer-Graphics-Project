@@ -1,5 +1,5 @@
 /*global THREE, requestAnimationFrame, console*/
-
+var controls;
 var camera, scene, renderer;
 var num_balls = 10;
 var scaling = 50;
@@ -164,15 +164,14 @@ function render() {
 
 function init() {
     'use strict';
-    renderer = new THREE.WebGLRenderer({
-        antialias: true
-    });
+    renderer = new THREE.WebGLRenderer({antialias: true});
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
     createScene();
     createCamera();
+		controls = new THREE.OrbitControls( camera );
 
     render();
 
