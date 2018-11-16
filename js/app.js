@@ -143,16 +143,18 @@ function onKeyDown(e) {
           case "52": // 4
               break;
           case "65": //A
+              break;
+          case "78": //N
+
+              break;
+          case "76": //L
+    			    break;
+          case "87": //W
               // assuming all submeshes inherit material from parent object
               for (var object in objects)
               console.log(objects[object])
                 // TODO add possibility for objects to have different materials
                 objects[object].material = new THREE.MeshBasicMaterial({ wireframe: true});
-
-              break;
-          case "78": //N
-              break;
-          case "76": //L
     			    break;
           case "80": //P - pauses the game
               pause = !pause;
