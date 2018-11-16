@@ -123,6 +123,17 @@ class ChessBoard extends GraphicalEntity {
   }
 }
 
+class Camera extends GraphicalEntity {
+  constructor(x,y,z){
+    super()
+    this.add(camera)
+    this.set(x,y,z)
+  }
+  update(){
+    this.position.x += delta
+  }
+}
+
 class Ambientlight extends GraphicalEntity {
   constructor(intensity) {
     super()

@@ -102,6 +102,12 @@ function onResize() {
   }
 }
 
+function createOrbitControls(){
+  controls = new THREE.OrbitControls( camera );
+  controls.autoRotateSpeed = 10
+  controls.autoRotate = true
+}
+
 function onKeyUp(e) {
   'use strict';
   keys_pressed[e.keyCode]=false;
@@ -171,7 +177,7 @@ function init() {
 
     createScene();
     createCamera();
-		controls = new THREE.OrbitControls( camera );
+    createOrbitControls();
 
     render();
 
@@ -186,6 +192,7 @@ function animate() {
     delta = clock.getDelta();
     if (!pause) {
       // Update
+      controls.update() // autoRotate orbitControls
       objects.map( function(object) {
         if (typeof object.update === 'function') {
           object.update(delta);
