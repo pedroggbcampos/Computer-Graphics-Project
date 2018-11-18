@@ -123,6 +123,24 @@ class ChessBoard extends GraphicalEntity {
   }
 }
 
+class Ball extends GraphicalEntity {
+  constructor(x,y,z){
+    super()
+
+    var geometry = new THREE.SphereGeometry( 1.5, 32, 32 );
+    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    this.add(new THREE.Mesh( geometry, material ))
+	this.add(new THREE.AxisHelper(3))
+    this.position.set(x+5,y,z)
+    scene.add(this)
+  }
+  update(){
+  	this.rotation.y +=delta
+  	this.position.z = Math.cos(this.rotation.y)*5
+	this.position.x = Math.sin(this.rotation.y)*5
+  }
+}
+
 class Camera extends GraphicalEntity {
   constructor(x,y,z){
     super()

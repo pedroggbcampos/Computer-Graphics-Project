@@ -20,6 +20,7 @@ function createScene() {
     scene = new THREE.Scene();
 
     addObject(new ChessBoard(0,0,0), "board");
+    addObject(new Ball(0,2,0), "ball");
     addObject(new BoardLight( 2*Math.sqrt(2)*20, 4, 2*Math.sqrt(2)*20), "boardLight");
 
     scene.add(new THREE.AxisHelper(10));
@@ -105,7 +106,7 @@ function onResize() {
 
 function createOrbitControls(){
   controls = new THREE.OrbitControls( camera );
-  controls.autoRotateSpeed = 10
+  controls.autoRotateSpeed = 3
   controls.autoRotate = true
 }
 
