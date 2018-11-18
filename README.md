@@ -3,7 +3,7 @@
 ## Centeno
  * [ ] cubo
  * [ ] reset
- * [ ] pause (tecla)
+ * [x] pause (tecla)
 
 ## Fields
  * [ ] luz direcional
@@ -12,8 +12,8 @@
  * [ ] wireframe
 
 ## Noiserv
- * [ ] bola
- * [ ] movimento bola
- * [x] câmara c orbitControls 
+ * [x] bola
+ * [x] movimento bola
+ * [x] câmara c orbitControls
 
 ## Bugs to Fix

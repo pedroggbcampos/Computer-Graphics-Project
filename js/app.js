@@ -153,6 +153,9 @@ function onKeyDown(e) {
               break;
           case "76": //L
     			    break;
+          case "77": //M
+              objects_named["ball"].toggle_speed()
+              break;
           case "87": //W
               // assuming all submeshes inherit material from parent object
               for (var object in objects)

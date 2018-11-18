@@ -126,7 +126,9 @@ class ChessBoard extends GraphicalEntity {
 class Ball extends GraphicalEntity {
   constructor(x,y,z){
     super()
-
+    this.userData.current_velocity = 0
+    this.userData.max_velocity = 6
+    this.userData.acceleration = 0
     var loader = new THREE.TextureLoader()
     loader.setCrossOrigin("use-credentials")
     var texture = loader.load("assets/textures/" + "ball14.jpg")
@@ -140,11 +142,43 @@ class Ball extends GraphicalEntity {
     this.position.set(x+5,y,z)
     scene.add(this)
   }
-  
+
   update(){
-    this.rotation.y +=delta
+    var max_velocity = this.userData.max_velocity
+    // increments the velocity
+    this.userData.current_velocity += this.userData.acceleration*delta
+    if (this.userData.current_velocity < 0) { // force it to stay at zero
+      console.log("reached minimum velocity")
+      this.userData.current_velocity = 0;
+      this.userData.acceleration = 0 // stops decreasing
+    } else if (this.userData.current_velocity > max_velocity) {
+      console.log("reached maximum velocity")
+      this.userData.current_velocity = max_velocity
+      this.userData.acceleration = 0 // stops increasing
+    }
+
+    // circular movement depend on rotation
+    this.rotation.y += this.userData.current_velocity*delta
     this.position.z = Math.cos(this.rotation.y)*5
     this.position.x = Math.sin(this.rotation.y)*5
+  }
+  // switches between increasing and decreasing velocity
+  toggle_speed(){
+    if (this.userData.acceleration > 0){
+      console.log("now decreasing velocity")
+      this.userData.acceleration = -1
+    } else if (this.userData.acceleration < 0){
+      console.log("now increasing velocity")
+      this.userData.acceleration = 1
+    } else { // case in which it has reached either max speed or minimum speed
+      if (this.userData.current_velocity > 0) {
+        console.log("now decreasing velocity")
+        this.userData.acceleration = -1
+      } else {
+        console.log("now increasing velocity")
+        this.userData.acceleration = 1
+      }
+    }
   }
 }
 
