@@ -127,24 +127,24 @@ class Ball extends GraphicalEntity {
   constructor(x,y,z){
     super()
 
-  	var loader = new THREE.TextureLoader()
-  	loader.setCrossOrigin("use-credentials")
+    var loader = new THREE.TextureLoader()
+    loader.setCrossOrigin("use-credentials")
     var texture = loader.load("assets/textures/" + "ball14.jpg")
 
     var geometry = new THREE.SphereGeometry( 1.5, 32, 32 );
     var material = new THREE.MeshPhongMaterial( {map: texture, shininess: 60} );
 
-
-  	var mesh = new THREE.Mesh( geometry, material )
+    var mesh = new THREE.Mesh( geometry, material )
     this.add(mesh)
-  	this.add(new THREE.AxisHelper(3))
+    this.add(new THREE.AxisHelper(3))
     this.position.set(x+5,y,z)
     scene.add(this)
   }
+  
   update(){
-  	this.rotation.y +=delta
-  	this.position.z = Math.cos(this.rotation.y)*5
-	this.position.x = Math.sin(this.rotation.y)*5
+    this.rotation.y +=delta
+    this.position.z = Math.cos(this.rotation.y)*5
+    this.position.x = Math.sin(this.rotation.y)*5
   }
 }
 
