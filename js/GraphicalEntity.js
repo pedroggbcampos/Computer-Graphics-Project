@@ -114,8 +114,14 @@ class Spotlight extends GraphicalEntity {
 class ChessBoard extends GraphicalEntity {
   constructor(x,y,z){
     super()
+
+    var loader = new THREE.TextureLoader()
+    loader.setCrossOrigin("use-credentials")
+    var texture = loader.load("assets/textures/" + "board.png")
+
+
     var geometry = new THREE.BoxGeometry( 20, 1, 20 );
-    var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+    var material = new THREE.MeshPhongMaterial( {map: texture} );
     this.add(new THREE.Mesh( geometry, material ))
 
     this.position.set(x,y,z)
