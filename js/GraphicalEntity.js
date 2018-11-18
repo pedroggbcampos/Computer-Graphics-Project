@@ -212,6 +212,11 @@ class BoardLight extends GraphicalEntity {
     this.light = light
     this.add(light)
     this.position.set(x,y,z)
+    this.userData.sphere = new THREE.SphereGeometry(10);
+    var geometry = new THREE.SphereGeometry( 1, 32, 32 );
+    var material = new THREE.MeshBasicMaterial();
+    var mesh = new THREE.Mesh( geometry, material )
+    this.add(mesh)
     scene.add(this);
   }
   toggle(){
