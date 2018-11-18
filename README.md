@@ -6,9 +6,9 @@
  * [x] pause (tecla)
 
 ## Fields
- * [ ] luz direcional
- * [ ] luz pontual
- * [ ] tabuleiro
+ * [x] luz direcional
+ * [x] luz pontual
+ * [x] tabuleiro
  * [ ] wireframe
 
 ## Noiserv

@@ -24,6 +24,8 @@ function createScene() {
 
 
     addObject(new BoardLight( 2*Math.sqrt(2)*3, 1.6, 2*Math.sqrt(2)*3), "boardLight");
+    addObject(new AmbientLight(0.25), "ambientLight");
+    addObject(new DirectionalLight(-10, 5, -10, 1), "directionalLight");
 
     scene.add(new THREE.AxisHelper(10));
 
@@ -149,7 +151,7 @@ function onKeyDown(e) {
           case "65": //A
               break;
           case "68": //D
-              objects_named["boardLight"].toggle()
+              objects_named["directionalLight"].toggle()
               break;
           case "78": //N
 
@@ -158,6 +160,9 @@ function onKeyDown(e) {
     			    break;
           case "77": //M
               objects_named["ball"].toggle_speed()
+              break;
+          case "80": //P
+              objects_named["boardLight"].toggle()
               break;
           case "87": //W
               // assuming all submeshes inherit material from parent object

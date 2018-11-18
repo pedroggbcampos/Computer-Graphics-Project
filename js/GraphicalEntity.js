@@ -118,13 +118,21 @@ class ChessBoard extends GraphicalEntity {
     var loader = new THREE.TextureLoader()
     loader.setCrossOrigin("use-credentials")
 
-    var texture = loader.load("assets/textures/" + "board.png")
-
-
     var geometry = new THREE.BoxGeometry( 20, 1, 20 );
-    var material = new THREE.MeshPhongMaterial( {shininess: 0,
-                                                 map: texture} );
-    this.add(new THREE.Mesh( geometry, material ))
+    var boardMaterials =
+    [
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.DoubleSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.DoubleSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "board.png"), side: THREE.DoubleSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.DoubleSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.DoubleSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.DoubleSide} ),
+
+
+    ];
+
+    var material = new THREE.MeshFaceMaterial(boardMaterials);
+    this.add(new THREE.Mesh( geometry, material ));
 
     this.position.set(x,y,z)
     scene.add(this)
@@ -207,7 +215,7 @@ class Camera extends GraphicalEntity {
 class BoardLight extends GraphicalEntity {
   constructor(x,y,z) {
     super()
-    this.add(new THREE.AxisHelper(10))
+    this.add(new THREE.AxisHelper(3))
     var light = new THREE.PointLight( 0xf4fcba, 3, 100, 1 );
     this.light = light
     this.add(light)
@@ -225,32 +233,58 @@ class BoardLight extends GraphicalEntity {
     } else {
       this.light.intensity = 0
     }
+    this.visible = !this.visible
   }
 }
 
-class Ambientlight extends GraphicalEntity {
-  constructor(intensity) {
+class DirectionalLight extends GraphicalEntity {
+  constructor(x, y, z, intensity) {
     super()
-
-    this.enabled=true
-
-  	this.name = "ambientlight"
     this.intensity = intensity
+    this.directionalLight = new THREE.DirectionalLight( 0xffffff, intensity );
+    this.add(this.directionalLight);
+    this.position.set(x ,y, z);
 
-    this.ambientLight = new THREE.AmbientLight( 0x404040 );
-    this.ambientLight.intensity = this.intensity
-    this.add(this.ambientLight);
+    this.userData.sphere = new THREE.SphereGeometry(5);
+    var geometry = new THREE.SphereGeometry( 1, 32, 32 );
+    var material = new THREE.MeshBasicMaterial();
+    var mesh = new THREE.Mesh( geometry, material )
+    this.add(mesh)
+
+
 
   	scene.add(this);
   }
 
   // enables or disables the light
   toggle() {
-    if (this.enabled){
-      this.ambientLight.intensity = this.intensity/10
+    if (this.directionalLight.intensity == 0){
+      this.directionalLight.intensity = this.intensity
     } else {
-      this.ambientLight.intensity = this.intensity
+      this.directionalLight.intensity = 0
     }
-    this.enabled = !this.enabled
+    this.visible = !this.visible
+  }
+}
+
+class AmbientLight extends GraphicalEntity {
+  constructor(intensity) {
+    super()
+    this.intensity = intensity
+
+    this.userData.ambientLight = new THREE.AmbientLight( 0x404040 );
+    this.userData.ambientLight.intensity = this.intensity
+    this.add(this.userData.ambientLight);
+
+  	scene.add(this);
+  }
+
+  // enables or disables the light
+  toggle() {
+    if (this.userData.ambientLight.intensity > 0){
+      this.userData.ambientLight.intensity = 0
+    } else {
+      this.userData.ambientLight.intensity = this.intensity
+    }
   }
 }
