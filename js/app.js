@@ -21,7 +21,9 @@ function createScene() {
 
     addObject(new ChessBoard(0,0,0), "board");
     addObject(new Ball(0,2,0), "ball");
-    addObject(new BoardLight( 2*Math.sqrt(2)*20, 4, 2*Math.sqrt(2)*20), "boardLight");
+
+
+    addObject(new BoardLight( 2*Math.sqrt(2)*3, 1.6, 2*Math.sqrt(2)*3), "boardLight");
 
     scene.add(new THREE.AxisHelper(10));
 

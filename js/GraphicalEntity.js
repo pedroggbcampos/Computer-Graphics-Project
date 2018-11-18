@@ -127,10 +127,17 @@ class Ball extends GraphicalEntity {
   constructor(x,y,z){
     super()
 
+  	var loader = new THREE.TextureLoader()
+  	loader.setCrossOrigin("use-credentials")
+    var texture = loader.load("assets/textures/" + "ball14.jpg")
+
     var geometry = new THREE.SphereGeometry( 1.5, 32, 32 );
-    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-    this.add(new THREE.Mesh( geometry, material ))
-	this.add(new THREE.AxisHelper(3))
+    var material = new THREE.MeshPhongMaterial( {map: texture, shininess: 60} );
+
+
+  	var mesh = new THREE.Mesh( geometry, material )
+    this.add(mesh)
+  	this.add(new THREE.AxisHelper(3))
     this.position.set(x+5,y,z)
     scene.add(this)
   }
@@ -158,7 +165,8 @@ class Camera extends GraphicalEntity {
 class BoardLight extends GraphicalEntity {
   constructor(x,y,z) {
     super()
-    var light = new THREE.PointLight( 0xff0000, 1, 100, 1 );
+    this.add(new THREE.AxisHelper(10))
+    var light = new THREE.PointLight( 0xf4fcba, 1, 100, 1 );
     this.add(light)
     this.position.set(x,y,z)
     scene.add(this);
