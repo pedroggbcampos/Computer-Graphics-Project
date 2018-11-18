@@ -117,11 +117,13 @@ class ChessBoard extends GraphicalEntity {
 
     var loader = new THREE.TextureLoader()
     loader.setCrossOrigin("use-credentials")
+
     var texture = loader.load("assets/textures/" + "board.png")
 
 
     var geometry = new THREE.BoxGeometry( 20, 1, 20 );
-    var material = new THREE.MeshPhongMaterial( {map: texture} );
+    var material = new THREE.MeshPhongMaterial( {shininess: 0,
+                                                 map: texture} );
     this.add(new THREE.Mesh( geometry, material ))
 
     this.position.set(x,y,z)
@@ -206,10 +208,18 @@ class BoardLight extends GraphicalEntity {
   constructor(x,y,z) {
     super()
     this.add(new THREE.AxisHelper(10))
-    var light = new THREE.PointLight( 0xf4fcba, 1, 100, 1 );
+    var light = new THREE.PointLight( 0xf4fcba, 3, 100, 1 );
+    this.light = light
     this.add(light)
     this.position.set(x,y,z)
     scene.add(this);
+  }
+  toggle(){
+    if (this.light.intensity == 0) {
+      this.light.intensity = 3
+    } else {
+      this.light.intensity = 0
+    }
   }
 }
 

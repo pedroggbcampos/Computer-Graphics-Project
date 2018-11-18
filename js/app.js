@@ -148,6 +148,9 @@ function onKeyDown(e) {
               break;
           case "65": //A
               break;
+          case "68": //D
+              objects_named["boardLight"].toggle()
+              break;
           case "78": //N
 
               break;
