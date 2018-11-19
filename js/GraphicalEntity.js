@@ -288,3 +288,21 @@ class AmbientLight extends GraphicalEntity {
     }
   }
 }
+
+class RubikCube extends GraphicalEntity{
+	constructor(x,y,z){
+		super()
+		var loader = new THREE.TextureLoader()
+		loader.setCrossOrigin("use-credentials")
+		
+		var bmap = loader.load("assets/textures/" + "rubik.jpg")
+		var map = loader.load("assets/textures/" + "rubik.jpg")
+		var geometry = new THREE.BoxGeometry( 4, 4, 4 );
+		var material = new THREE.MeshPhongMaterial( {shininess: 0, map: map ,bumpMap: bmap} );
+
+		var mesh = new THREE.Mesh( geometry, material )
+		this.add(mesh)
+		this.position.set(x,y,z)
+		scene.add(this)
+	}
+}

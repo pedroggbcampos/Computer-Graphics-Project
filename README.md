@@ -1,9 +1,9 @@
 # todo list
 
 ## Centeno
- * [ ] cubo
+ * [x] cubo
  * [ ] reset
- * [x] pause (tecla)
+ * [ ] pause (ecrã de pausa)
 
 ## Fields
  * [x] luz direcional

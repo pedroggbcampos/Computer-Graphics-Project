@@ -21,6 +21,7 @@ function createScene() {
 
     addObject(new ChessBoard(0,0,0), "board");
     addObject(new Ball(0,2,0), "ball");
+	addObject(new RubikCube(0,2.5,0), "rubixcube");
 
 
     addObject(new BoardLight( 2*Math.sqrt(2)*3, 1.6, 2*Math.sqrt(2)*3), "boardLight");
@@ -132,37 +133,17 @@ function onKeyDown(e) {
               for (var object in objects)
                 objects[object].change_material()
               break;
-          case "37": // left
-              break;
-          case "38": // up
-              break;
-          case "39": // right
-              break;
-          case "40": // down
-              break;
-          case "49": // 1
-                    break;
-          case "50": // 2
-              break;
-          case "51": // 3
-            break;
-          case "52": // 4
-              break;
-          case "65": //A
-              break;
           case "68": //D
               objects_named["directionalLight"].toggle()
               break;
-          case "78": //N
-
-              break;
-          case "76": //L
-    			    break;
           case "77": //M
               objects_named["ball"].toggle_speed()
               break;
           case "80": //P
               objects_named["boardLight"].toggle()
+              break;
+		  case "82": //R - reset
+              init.call()
               break;
           case "87": //W
               // assuming all submeshes inherit material from parent object
