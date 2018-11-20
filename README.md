@@ -3,7 +3,7 @@
 ## Centeno
  * [x] cubo
  * [ ] reset
- * [ ] pause (ecrã de pausa)
+ * [x] pause
 
 ## Fields
  * [x] luz direcional

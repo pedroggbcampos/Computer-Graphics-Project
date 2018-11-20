@@ -6,10 +6,13 @@ var scaling = 50;
 var delta = 1;
 var pause = false;
 var flagL = false
+var flag_reset = false;
 
 var keys_pressed = {}; // stores the keys pressed
 var objects = []; // Objects in the scene
 var objects_named = {} // object that are named and need to be called
+
+var plane;
 
 var clock = new THREE.Clock();
 
@@ -72,6 +75,7 @@ function createCamera() {
   camera.position.y = 30;
   camera.position.z = 30;
   camera.lookAt(scene.position);
+  scene.add(camera)
   onResize() // update to the scale once
 }
 
@@ -115,6 +119,28 @@ function createOrbitControls(){
   controls.autoRotate = true
 }
 
+function pauseMenu(){
+	var hudCanvas = document.createElement('canvas');
+	hudCanvas.width = window.innerWidth;
+	hudCanvas.height = window.innerHeight;
+	var hudBitmap = hudCanvas.getContext('2d');
+	hudBitmap.font = "40px Arial";
+	hudBitmap.textAlign = 'center';
+	hudBitmap.fillStyle = "rgba(100,255,255)";
+	hudBitmap.fillText('Pause', window.innerWidth / 2, window.innerHeight / 2);
+	
+	var hudTexture = new THREE.Texture(hudCanvas)
+	hudTexture.needsUpdate = true;
+	var material = new THREE.MeshBasicMaterial( {map: hudTexture } );
+	material.transparent = true;
+	
+	var planeGeometry = new THREE.PlaneGeometry( window.innerWidth /4, window.innerHeight/4 );
+	plane = new THREE.Mesh( planeGeometry, material );
+	camera.add(plane);
+	plane.position.set(0,0,-40);
+	plane.visible = false;
+}
+
 function onKeyUp(e) {
   'use strict';
   keys_pressed[e.keyCode]=false;
@@ -143,7 +169,8 @@ function onKeyDown(e) {
               objects_named["boardLight"].toggle()
               break;
 		  case "82": //R - reset
-              init.call()
+			if(flag_reset)
+			  init()
               break;
           case "87": //W
               // assuming all submeshes inherit material from parent object
@@ -154,6 +181,14 @@ function onKeyDown(e) {
     			    break;
           case "83": //S - pauses the game
               pause = !pause;
+			 	if(plane.visible){
+					plane.visible = false;
+					flag_reset = false;
+				}
+				else{
+					plane.visible = true;
+					flag_reset = true;
+				}
               break;
       }
     }
@@ -176,12 +211,14 @@ function init() {
     createScene();
     createCamera();
     createOrbitControls();
+	pauseMenu();
 
     render();
 
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
     window.addEventListener("resize", onResize);
+	
 }
 
 function animate() {
