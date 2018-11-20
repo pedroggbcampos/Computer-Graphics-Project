@@ -7,15 +7,13 @@ var delta = 1;
 var pause = false;
 var flagL = false
 var flag_reset = false;
+var plane;
 
 var keys_pressed = {}; // stores the keys pressed
 var objects = []; // Objects in the scene
 var objects_named = {} // object that are named and need to be called
 
-var plane;
-
 var clock = new THREE.Clock();
-
 
 function createScene() {
     'use strict';
@@ -169,8 +167,10 @@ function onKeyDown(e) {
               objects_named["boardLight"].toggle()
               break;
 		  case "82": //R - reset
-			if(flag_reset)
-			  init()
+			if(flag_reset){
+			  createiInit()
+			  pause = !pause;
+			}
               break;
           case "87": //W
               // assuming all submeshes inherit material from parent object
@@ -208,17 +208,21 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    createScene();
-    createCamera();
-    createOrbitControls();
-	pauseMenu();
-
-    render();
+    createiInit()
 
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
     window.addEventListener("resize", onResize);
 	
+}
+
+function createiInit(){
+	createScene();
+    createCamera();
+    createOrbitControls();
+	pauseMenu();
+
+    render();
 }
 
 function animate() {

@@ -2,7 +2,7 @@
 
 ## Centeno
  * [x] cubo
- * [ ] reset
+ * [x] reset
  * [x] pause
 
 ## Fields
