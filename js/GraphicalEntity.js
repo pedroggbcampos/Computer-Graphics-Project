@@ -154,7 +154,7 @@ class Ball extends GraphicalEntity {
 
     var mesh = new THREE.Mesh( geometry, material )
     this.add(mesh)
-    this.add(new THREE.AxisHelper(3))
+    //this.add(new THREE.AxisHelper(3))
     this.position.set(x+5,y,z)
     scene.add(this)
   }
@@ -215,7 +215,7 @@ class Camera extends GraphicalEntity {
 class BoardLight extends GraphicalEntity {
   constructor(x,y,z) {
     super()
-    this.add(new THREE.AxisHelper(3))
+    //this.add(new THREE.AxisHelper(3))
     var light = new THREE.PointLight( 0xf4fcba, 3, 100, 1 );
     this.light = light
     this.add(light)
@@ -329,7 +329,7 @@ class PauseScreen extends GraphicalEntity{
 		this.add(mesh)
 		this.position.set(x,y,z)
     this.rotation.x = 3*Math.PI/2
-    this.add(new THREE.AxisHelper(3))
+    //this.add(new THREE.AxisHelper(3))
 		scene.add(this)
 	}
 }
