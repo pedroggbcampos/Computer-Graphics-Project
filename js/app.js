@@ -30,7 +30,7 @@ function createScene() {
     addObject(new AmbientLight(0.25), "ambientLight");
     addObject(new DirectionalLight(-10, 5, -10, 1), "directionalLight");
 
-    scene.add(new THREE.AxisHelper(10));
+    //scene.add(new THREE.AxisHelper(10));
 
 }
 
@@ -164,7 +164,7 @@ function onKeyDown(e) {
           case "68": //D
               if (!pause) objects_named["directionalLight"].toggle()
               break;
-          case "77": //M
+          case "66": //B
               if (!pause) objects_named["ball"].toggle_speed()
               break;
           case "80": //P
