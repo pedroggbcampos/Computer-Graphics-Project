@@ -13,6 +13,7 @@ var plane;
 var keys_pressed = {}; // stores the keys pressed
 var objects = []; // Objects in the scene
 var objects_named = {} // object that are named and need to be called
+var current_material_index = 0
 
 var clock = new THREE.Clock();
 
@@ -156,10 +157,10 @@ function onKeyDown(e) {
       switch (key) {
         case "70": //F
             break;
-          case "71": //G
-              for (var object in objects)
-                objects[object].change_material()
-              break;
+          case "76": //L
+            // this function is in file functions.js
+            change_material() //changes objects to basic material simulating lighting calcul stopage
+            break;
           case "68": //D
               objects_named["directionalLight"].toggle()
               break;
@@ -169,29 +170,26 @@ function onKeyDown(e) {
           case "80": //P
               objects_named["boardLight"].toggle()
               break;
-		  case "82": //R - reset
-			if(flag_reset){
-			  createiInit()
-			  pause = !pause;
-			}
-              break;
+		      case "82": //R - reset
+			        if(flag_reset){
+                createiInit()
+			          pause = !pause;
+			          }
+                break;
           case "87": //W
-              // assuming all submeshes inherit material from parent object
-              for (var object in objects)
-              console.log(objects[object])
-                // TODO add possibility for objects to have different materials
-                objects[object].material = new THREE.MeshBasicMaterial({ wireframe: true});
+              // this function is in file functions.js
+              change_wireframe() //changes wireframe boolean for each object
     			    break;
           case "83": //S - pauses the game
               pause = !pause;
-			 	if(plane.visible){
-					plane.visible = false;
-					flag_reset = false;
-				}
-				else{
-					plane.visible = true;
-					flag_reset = true;
-				}
+			 	      if(plane.visible){
+                plane.visible = false;
+					      flag_reset = false;
+				      }
+				      else{
+					      plane.visible = true;
+					      flag_reset = true;
+				                   }
               break;
       }
     }

@@ -10,30 +10,12 @@ class GraphicalEntity extends THREE.Object3D {
   constructor(){
     super()
     this.materials = [] // stores the list of materials with different shadings
-    this.current_material_index = 0
-    this.num_materials = 3
     this.update_queue = []
 
-    // group of meshes
-    this.mesh_group = new THREE.Group();
   }
   update(delta) {
   }
 
-  change_material() {
-    console.log(this)
-    this.current_material_index = (this.current_material_index + 1) % this.num_materials
-
-    // required to do this because the scope of the following function is limited
-    var material_index = this.current_material_index
-    this.mesh_group.traverse(function (node) {
-      if (node instanceof THREE.Mesh) {
-        console.log(node.materials[material_index])
-        node.material = node.materials[material_index];
-      }
-    });
-
-  }
 
   change_calc() {
     if (flagL){
@@ -58,59 +40,6 @@ class GraphicalEntity extends THREE.Object3D {
 /**
  * Generic Object - basically a decorated THREE.js Object3D
  */
-class Spotlight extends GraphicalEntity {
-  constructor(x, y, z,target) {
-    super()
-
-    this.enabled=true
-
-  	this.material = new THREE.MeshBasicMaterial({ color: "yellow"});
-  	this.name = "spotlight"
-
-  	this.addSpotlightLight(0, -1, 0);
-  	this.addSpotlightTop(0, 0, 0);
-
-    this.spotLight = new THREE.SpotLight(0xFFFFFF);
-    this.spotLight.position.set(0,0,0);
-    this.spotLight.castShadow = true
-    this.spotLight.target = target;
-    this.add(this.spotLight);
-
-  	scene.add(this);
-
-    this.position.set(x,y,z)
-    var direction = new THREE.Vector3(0, 0, 0)
-    direction.sub(this.position)
-    direction.setY(500)
-    this.lookAt(direction)
-
-  }
-
-  // enables or disables the light
-  toggle() {
-    if (this.enabled){
-      this.spotLight.intensity = 0.0
-    } else {
-      this.spotLight.intensity = 1
-    }
-    this.enabled = !this.enabled
-  }
-
-  addSpotlightTop(x, y, z){
-	var geometry = new THREE.ConeGeometry(1, 2,  20, 32);
-	var mesh = new THREE.Mesh(geometry, this.material);
-	mesh.position.set(x, y, z);
-	this.add(mesh);
-  }
-
-  addSpotlightLight(x, y, z){
-	var geometry = new THREE.SphereGeometry(.5, 32, 32);
-	var mesh = new THREE.Mesh(geometry, this.material);
-	mesh.position.set(x, y, z);
-	this.add(mesh);
-  }
-}
-
 class ChessBoard extends GraphicalEntity {
   constructor(x,y,z){
     super()
@@ -119,20 +48,33 @@ class ChessBoard extends GraphicalEntity {
     loader.setCrossOrigin("use-credentials")
 
     var geometry = new THREE.BoxGeometry( 20, 1, 20 );
-    var boardMaterials =
+    var boardMaterialsP =
     [
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.DoubleSide} ),
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.DoubleSide} ),
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "board.png"), side: THREE.DoubleSide} ),
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.DoubleSide} ),
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.DoubleSide} ),
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.DoubleSide} ),
-
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "board.png"), side: THREE.FrontSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} )
 
     ];
 
-    var material = new THREE.MeshFaceMaterial(boardMaterials);
-    this.add(new THREE.Mesh( geometry, material ));
+    var boardMaterialsB =
+    [
+      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
+      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
+      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "board.png"), side: THREE.FrontSide} ),
+      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
+      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
+      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} )
+
+    ];
+
+    var mesh = new THREE.Mesh( geometry, boardMaterialsP)
+    this.userData.mesh = mesh
+    this.materials.push(boardMaterialsP)
+    this.materials.push(boardMaterialsB)
+    this.add(mesh);
 
     this.position.set(x,y,z)
     scene.add(this)
@@ -150,9 +92,13 @@ class Ball extends GraphicalEntity {
     var texture = loader.load("assets/textures/" + "ball14.jpg")
 
     var geometry = new THREE.SphereGeometry( 1.5, 32, 32 );
-    var material = new THREE.MeshPhongMaterial( {map: texture, shininess: 60} );
+    var materialP = new THREE.MeshPhongMaterial( {map: texture, shininess: 60} );
+    var materialB = new THREE.MeshBasicMaterial( {map: texture, shininess: 60} );
 
-    var mesh = new THREE.Mesh( geometry, material )
+    var mesh = new THREE.Mesh( geometry, materialP )
+    this.userData.mesh = mesh
+    this.materials.push(materialP)
+    this.materials.push(materialB)
     this.add(mesh)
     this.add(new THREE.AxisHelper(3))
     this.position.set(x+5,y,z)
@@ -222,8 +168,13 @@ class BoardLight extends GraphicalEntity {
     this.position.set(x,y,z)
     this.userData.sphere = new THREE.SphereGeometry(10);
     var geometry = new THREE.SphereGeometry( 1, 32, 32 );
-    var material = new THREE.MeshBasicMaterial();
-    var mesh = new THREE.Mesh( geometry, material )
+    var material1 = new THREE.MeshBasicMaterial();
+    var material2 = new THREE.MeshBasicMaterial();
+    var mesh = new THREE.Mesh( geometry, material1)
+    this.userData.mesh = mesh
+    this.materials.push(material1)
+    this.materials.push(material2)
+    console.log(this.materials)
     this.add(mesh)
     scene.add(this);
   }
@@ -247,8 +198,12 @@ class DirectionalLight extends GraphicalEntity {
 
     this.userData.sphere = new THREE.SphereGeometry(5);
     var geometry = new THREE.SphereGeometry( 1, 32, 32 );
-    var material = new THREE.MeshBasicMaterial();
-    var mesh = new THREE.Mesh( geometry, material )
+    var material1 = new THREE.MeshBasicMaterial();
+    var material2 = new THREE.MeshBasicMaterial();
+    var mesh = new THREE.Mesh( geometry, material1 )
+    this.userData.mesh = mesh
+    this.materials.push(material1)
+    this.materials.push(material2)
     this.add(mesh)
 
 
@@ -298,9 +253,13 @@ class RubikCube extends GraphicalEntity{
 		var bmap = loader.load("assets/textures/" + "rubik.jpg")
 		var map = loader.load("assets/textures/" + "rubik.jpg")
 		var geometry = new THREE.BoxGeometry( 4, 4, 4 );
-		var material = new THREE.MeshPhongMaterial( {shininess: 0, map: map ,bumpMap: bmap} );
+    var materialP = new THREE.MeshPhongMaterial( {shininess: 0, map: map ,bumpMap: bmap} );
+		var materialB = new THREE.MeshBasicMaterial( {shininess: 0, map: map ,bumpMap: bmap} );
 
-		var mesh = new THREE.Mesh( geometry, material )
+		var mesh = new THREE.Mesh( geometry, materialP )
+    this.userData.mesh = mesh
+    this.materials.push(materialP)
+    this.materials.push(materialB)
 		this.add(mesh)
 		this.position.set(x,y,z)
 		scene.add(this)

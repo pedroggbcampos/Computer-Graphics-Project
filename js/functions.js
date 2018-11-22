@@ -116,3 +116,33 @@ function decompose_triangle(vertices, enabled=false){
   return verts
 
 }
+
+//changes the objects mesh material
+function change_material() {
+  current_material_index = (current_material_index + 1) % 2
+  for (var object in objects){
+    if(objects[object].userData.mesh instanceof THREE.Mesh){
+      objects[object].userData.mesh.material = objects[object].materials[current_material_index]
+    }
+  }
+}
+
+//changes the wireframe value for every object that has a mesh
+function change_wireframe() {
+  for (var object in objects){
+    if(objects[object].userData.mesh instanceof THREE.Mesh){
+      for(var material in objects[object].materials){
+        //if the object has multiple materials
+        if(objects[object].materials[material] instanceof Array){
+          for(var submaterial in objects[object].materials[material]){
+            objects[object].materials[material][submaterial].wireframe = !objects[object].materials[material][submaterial].wireframe
+          }
+        }
+        //if the object only has 1 material
+        else{
+          objects[object].materials[material].wireframe = !objects[object].materials[material].wireframe
+        }
+      }
+    }
+  }
+}

@@ -9,7 +9,8 @@
  * [x] luz direcional
  * [x] luz pontual
  * [x] tabuleiro
- * [ ] wireframe
+ * [x] wireframe
+ * [x] parar calculo da luz
 
 ## Noiserv
  * [x] bola
