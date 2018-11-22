@@ -161,13 +161,13 @@ function onKeyDown(e) {
                 objects[object].change_material()
               break;
           case "68": //D
-              objects_named["directionalLight"].toggle()
+              if (!pause) objects_named["directionalLight"].toggle()
               break;
           case "77": //M
-              objects_named["ball"].toggle_speed()
+              if (!pause) objects_named["ball"].toggle_speed()
               break;
           case "80": //P
-              objects_named["boardLight"].toggle()
+              if (!pause) objects_named["boardLight"].toggle()
               break;
 		  case "82": //R - reset
         			if(pause){
