@@ -250,24 +250,30 @@ class RubikCube extends GraphicalEntity{
 		var loader = new THREE.TextureLoader()
 		loader.setPath("assets/textures/")
 
-    var face_materials = []
+    var face_materialsP = []
     for (var i=1; i<= 6; i++){
-      face_materials.push(new THREE.MeshPhongMaterial( {
+      face_materialsP.push(new THREE.MeshPhongMaterial( {
         map: loader.load("face"+i+".png"),
         bumpMap: loader.load("bmap_face-emboss.png"),
         bumpScale: -3
       }))
     }
 
-		var map = loader.load("rubik.jpg")
-		var geometry = new THREE.BoxGeometry( 4, 4, 4 );
-    var materialP = new THREE.MeshPhongMaterial( {shininess: 0, map: map ,bumpMap: bmap} );
-		var materialB = new THREE.MeshBasicMaterial( {shininess: 0, map: map ,bumpMap: bmap} );
+    var face_materialsB = []
+    for (var i=1; i<= 6; i++){
+      face_materialsB.push(new THREE.MeshBasicMaterial( {
+        map: loader.load("face"+i+".png"),
+        bumpMap: loader.load("bmap_face-emboss.png"),
+        bumpScale: -3
+      }))
+    }
 
-		var mesh = new THREE.Mesh( geometry, materialP )
+		var geometry = new THREE.BoxGeometry( 4, 4, 4 );
+
+		var mesh = new THREE.Mesh( geometry, face_materialsP )
     this.userData.mesh = mesh
-    this.materials.push(materialP)
-    this.materials.push(materialB)
+    this.materials.push(face_materialsP)
+    this.materials.push(face_materialsB)
 		this.add(mesh)
 		this.position.set(x,y,z)
 		scene.add(this)
