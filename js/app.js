@@ -164,7 +164,7 @@ function onKeyDown(e) {
           case "68": //D
               if (!pause) objects_named["directionalLight"].toggle()
               break;
-          case "77": //M
+          case "66": //B
               if (!pause) objects_named["ball"].toggle_speed()
               break;
           case "80": //P
