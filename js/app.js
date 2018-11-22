@@ -26,7 +26,7 @@ function createScene() {
 
 
     addObject(new BoardLight( 2*Math.sqrt(2)*3, 1.6, 2*Math.sqrt(2)*3), "boardLight");
-    addObject(new AmbientLight(0.25), "ambientLight");
+    //addObject(new AmbientLight(0.25), "ambientLight");
     addObject(new DirectionalLight(-10, 5, -10, 1), "directionalLight");
 
     scene.add(new THREE.AxisHelper(10));
@@ -195,13 +195,9 @@ function render() {
     renderer.autoClear = false
     renderer.clear(true, true, true)
 
-    renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
     renderer.render(scene, camera);
 
     if (pause){
-      renderer.clearDepth(); // clear the depth buffer
-
-      renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
       renderer.render(scene, pause_camera);
     }
 }
