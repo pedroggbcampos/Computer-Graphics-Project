@@ -7,7 +7,6 @@ var scaling = 50;
 var delta = 1;
 var pause = false;
 var flagL = false
-var flag_reset = false;
 var plane;
 
 var keys_pressed = {}; // stores the keys pressed
@@ -28,7 +27,7 @@ function createScene() {
 
 
     addObject(new BoardLight( 2*Math.sqrt(2)*3, 1.6, 2*Math.sqrt(2)*3), "boardLight");
-    addObject(new AmbientLight(0.25), "ambientLight");
+    //addObject(new AmbientLight(0.25), "ambientLight");
     addObject(new DirectionalLight(-10, 5, -10, 1), "directionalLight");
 
     scene.add(new THREE.AxisHelper(10));
@@ -76,21 +75,25 @@ function createCamera() {
   camera.position.z = 30;
   camera.lookAt(scene.position);
   scene.add(camera)
-  onResize() // update to the scale once
 }
 
 function onResize() {
   'use strict';
+  resizeCamera(camera);
+  resizeCamera(pause_camera);
+}
+
+function resizeCamera(cam){
   var aspect = window.innerWidth / window.innerHeight;
   var frustumSize = 100;
 
-  if (camera.isPerspectiveCamera) {
-    camera.aspect = aspect
+  if (cam.isPerspectiveCamera) {
+    cam.aspect = aspect
     //Resizes the output canvas to (width, height) with device pixel ratio taken into account
     renderer.setSize( window.innerWidth, window.innerHeight );
 
     // Updates the camera projection matrix. Must be called after any change of parameters.
-    camera.updateProjectionMatrix();
+    cam.updateProjectionMatrix();
 
   } else { // OrthographicCamera
     /*   __________________ ^
@@ -101,15 +104,15 @@ function onResize() {
      *   <---------------->
      *    FrustumSize * aspect
      */
-		camera.left   = - frustumSize * aspect / 2;
-		camera.right  =   frustumSize * aspect / 2;
-		camera.top    =   frustumSize / 2;
-		camera.bottom = - frustumSize / 2;
+    cam.left   = - frustumSize * aspect / 2;
+    cam.right  =   frustumSize * aspect / 2;
+    cam.top    =   frustumSize / 2;
+    cam.bottom = - frustumSize / 2;
 
     // Updates the camera projection matrix. Must be called after any change of parameters.
-		camera.updateProjectionMatrix();
-
     renderer.setSize( window.innerWidth, window.innerHeight );
+    cam.updateProjectionMatrix();
+
   }
 }
 
@@ -133,9 +136,6 @@ function pauseMenu(){
     window.innerHeight / 2, window.innerHeight / - 2,
     0, 5 ); // very short far in order not to render anything else in the scene
   pause_camera.isPerspectiveCamera = false
-
-  pause_camera.zoom = 10;
-  pause_camera.updateProjectionMatrix(); // update the zoom level
 
   pause_camera.position.set(0,1000,0)
   pause_camera.lookAt(scene.position);
@@ -162,34 +162,26 @@ function onKeyDown(e) {
             change_material() //changes objects to basic material simulating lighting calcul stopage
             break;
           case "68": //D
-              objects_named["directionalLight"].toggle()
+              if (!pause) objects_named["directionalLight"].toggle()
               break;
           case "77": //M
-              objects_named["ball"].toggle_speed()
+              if (!pause) objects_named["ball"].toggle_speed()
               break;
           case "80": //P
-              objects_named["boardLight"].toggle()
+              if (!pause) objects_named["boardLight"].toggle()
               break;
-		      case "82": //R - reset
-			        if(flag_reset){
-                createiInit()
-			          pause = !pause;
-			          }
-                break;
+		  case "82": //R - reset
+        			if(pause){
+        			  createiInit()
+        			  pause = false;
+        			}
+              break;
           case "87": //W
               // this function is in file functions.js
               change_wireframe() //changes wireframe boolean for each object
     			    break;
           case "83": //S - pauses the game
               pause = !pause;
-			 	      if(plane.visible){
-                plane.visible = false;
-					      flag_reset = false;
-				      }
-				      else{
-					      plane.visible = true;
-					      flag_reset = true;
-				                   }
               break;
       }
     }
@@ -201,13 +193,9 @@ function render() {
     renderer.autoClear = false
     renderer.clear(true, true, true)
 
-    renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
     renderer.render(scene, camera);
 
     if (pause){
-      renderer.clearDepth(); // clear the depth buffer
-
-      renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
       renderer.render(scene, pause_camera);
     }
 }
@@ -232,6 +220,9 @@ function createiInit(){
   createCamera();
   createOrbitControls();
 	pauseMenu();
+
+  onResize()
+
   render();
 }
 

@@ -100,7 +100,7 @@ class Ball extends GraphicalEntity {
     this.materials.push(materialP)
     this.materials.push(materialB)
     this.add(mesh)
-    this.add(new THREE.AxisHelper(3))
+    //this.add(new THREE.AxisHelper(3))
     this.position.set(x+5,y,z)
     scene.add(this)
   }
@@ -161,7 +161,7 @@ class Camera extends GraphicalEntity {
 class BoardLight extends GraphicalEntity {
   constructor(x,y,z) {
     super()
-    this.add(new THREE.AxisHelper(3))
+    //this.add(new THREE.AxisHelper(3))
     var light = new THREE.PointLight( 0xf4fcba, 3, 100, 1 );
     this.light = light
     this.add(light)
@@ -248,10 +248,18 @@ class RubikCube extends GraphicalEntity{
 	constructor(x,y,z){
 		super()
 		var loader = new THREE.TextureLoader()
-		loader.setCrossOrigin("use-credentials")
+		loader.setPath("assets/textures/")
 
-		var bmap = loader.load("assets/textures/" + "rubik.jpg")
-		var map = loader.load("assets/textures/" + "rubik.jpg")
+    var face_materials = []
+    for (var i=1; i<= 6; i++){
+      face_materials.push(new THREE.MeshPhongMaterial( {
+        map: loader.load("face"+i+".png"),
+        bumpMap: loader.load("bmap_face-emboss.png"),
+        bumpScale: -3
+      }))
+    }
+
+		var map = loader.load("rubik.jpg")
 		var geometry = new THREE.BoxGeometry( 4, 4, 4 );
     var materialP = new THREE.MeshPhongMaterial( {shininess: 0, map: map ,bumpMap: bmap} );
 		var materialB = new THREE.MeshBasicMaterial( {shininess: 0, map: map ,bumpMap: bmap} );
@@ -280,7 +288,7 @@ class PauseScreen extends GraphicalEntity{
 		this.add(mesh)
 		this.position.set(x,y,z)
     this.rotation.x = 3*Math.PI/2
-    this.add(new THREE.AxisHelper(3))
+    //this.add(new THREE.AxisHelper(3))
 		scene.add(this)
 	}
 }
