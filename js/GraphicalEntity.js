@@ -100,7 +100,7 @@ class Ball extends GraphicalEntity {
     this.materials.push(materialP)
     this.materials.push(materialB)
     this.add(mesh)
-    //this.add(new THREE.AxisHelper(3))
+    this.add(new THREE.AxisHelper(3))
     this.position.set(x+5,y,z)
     scene.add(this)
   }
@@ -121,6 +121,7 @@ class Ball extends GraphicalEntity {
 
     // circular movement depend on rotation
     this.rotation.y += this.userData.current_velocity*delta
+    this.rotation.z -= 1.6*this.userData.current_velocity*delta
     this.position.z = Math.cos(this.rotation.y)*5
     this.position.x = Math.sin(this.rotation.y)*5
   }
