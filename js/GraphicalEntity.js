@@ -88,8 +88,8 @@ class Ball extends GraphicalEntity {
     this.userData.max_velocity = 6
     this.userData.acceleration = 0
     var loader = new THREE.TextureLoader()
-    loader.setCrossOrigin("use-credentials")
-    var texture = loader.load("assets/textures/" + "ball14.jpg")
+    loader.setPath("assets/textures/")
+    var texture = loader.load("ball14.jpg")
 
     var geometry = new THREE.SphereGeometry( 1.5, 32, 32 );
     var materialP = new THREE.MeshPhongMaterial( {map: texture, specular: 0xfffffff, shininess: 60} );
@@ -288,9 +288,9 @@ class PauseScreen extends GraphicalEntity{
 	constructor(x,y,z){
 		super()
 		var loader = new THREE.TextureLoader()
-		loader.setCrossOrigin("use-credentials")
+    loader.setPath("assets/textures/")
 
-		var pause = loader.load("assets/textures/" + "paused2.png")
+		var pause = loader.load("paused2.png")
 		var geometry = new THREE.PlaneGeometry( 40, 10 );
 		var material = new THREE.MeshBasicMaterial({shininess: 0, map: pause} );
     material.transparent = true
