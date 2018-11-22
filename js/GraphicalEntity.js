@@ -293,14 +293,22 @@ class RubikCube extends GraphicalEntity{
 	constructor(x,y,z){
 		super()
 		var loader = new THREE.TextureLoader()
-		loader.setCrossOrigin("use-credentials")
+		loader.setPath("assets/textures/")
 
-		var bmap = loader.load("assets/textures/" + "rubik.jpg")
-		var map = loader.load("assets/textures/" + "rubik.jpg")
+    var face_materials = []
+    for (var i=1; i<= 6; i++){
+      face_materials.push(new THREE.MeshPhongMaterial( {
+        map: loader.load("face"+i+".png"),
+        bumpMap: loader.load("bmap_face-emboss.png"),
+        bumpScale: -3
+      }))
+    }
+
+		var map = loader.load("rubik.jpg")
 		var geometry = new THREE.BoxGeometry( 4, 4, 4 );
-		var material = new THREE.MeshPhongMaterial( {shininess: 0, map: map ,bumpMap: bmap} );
+		//var material = new THREE.MeshPhongMaterial( {shininess: 0, map: map} );
 
-		var mesh = new THREE.Mesh( geometry, material )
+		var mesh = new THREE.Mesh( geometry, face_materials )
 		this.add(mesh)
 		this.position.set(x,y,z)
 		scene.add(this)

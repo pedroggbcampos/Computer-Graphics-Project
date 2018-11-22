@@ -109,9 +109,9 @@ function resizeCamera(cam){
     cam.bottom = - frustumSize / 2;
 
     // Updates the camera projection matrix. Must be called after any change of parameters.
+    renderer.setSize( window.innerWidth, window.innerHeight );
     cam.updateProjectionMatrix();
 
-    renderer.setSize( window.innerWidth, window.innerHeight );
   }
 }
 
@@ -227,7 +227,7 @@ function createiInit(){
   createOrbitControls();
 	pauseMenu();
 
-  onResize() // for browser reloading
+  onResize()
 
   render();
 }
