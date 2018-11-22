@@ -30,7 +30,7 @@ function createScene() {
     //addObject(new AmbientLight(0.25), "ambientLight");
     addObject(new DirectionalLight(-10, 5, -10, 1), "directionalLight");
 
-    scene.add(new THREE.AxisHelper(10));
+    //scene.add(new THREE.AxisHelper(10));
 
 }
 

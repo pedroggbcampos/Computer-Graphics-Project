@@ -92,15 +92,15 @@ class Ball extends GraphicalEntity {
     var texture = loader.load("assets/textures/" + "ball14.jpg")
 
     var geometry = new THREE.SphereGeometry( 1.5, 32, 32 );
-    var materialP = new THREE.MeshPhongMaterial( {map: texture, shininess: 60} );
-    var materialB = new THREE.MeshBasicMaterial( {map: texture, shininess: 60} );
+    var materialP = new THREE.MeshPhongMaterial( {map: texture, specular: 0xfffffff, shininess: 60} );
+    var materialB = new THREE.MeshBasicMaterial( {map: texture, specular: 0xfffffff, shininess: 60} );
 
     var mesh = new THREE.Mesh( geometry, materialP )
     this.userData.mesh = mesh
     this.materials.push(materialP)
     this.materials.push(materialB)
     this.add(mesh)
-    this.add(new THREE.AxisHelper(3))
+    //this.add(new THREE.AxisHelper(3))
     this.position.set(x+5,y,z)
     scene.add(this)
   }
@@ -163,7 +163,7 @@ class BoardLight extends GraphicalEntity {
   constructor(x,y,z) {
     super()
     //this.add(new THREE.AxisHelper(3))
-    var light = new THREE.PointLight( 0xf4fcba, 3, 100, 1 );
+    var light = new THREE.PointLight( 0xf4fcba, 1.5, 100, 1 );
     this.light = light
     this.add(light)
     this.position.set(x,y,z)
