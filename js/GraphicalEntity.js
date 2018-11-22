@@ -294,7 +294,7 @@ class RubikCube extends GraphicalEntity{
 		super()
 		var loader = new THREE.TextureLoader()
 		loader.setCrossOrigin("use-credentials")
-		
+
 		var bmap = loader.load("assets/textures/" + "rubik.jpg")
 		var map = loader.load("assets/textures/" + "rubik.jpg")
 		var geometry = new THREE.BoxGeometry( 4, 4, 4 );
@@ -303,6 +303,25 @@ class RubikCube extends GraphicalEntity{
 		var mesh = new THREE.Mesh( geometry, material )
 		this.add(mesh)
 		this.position.set(x,y,z)
+		scene.add(this)
+	}
+}
+
+class PauseScreen extends GraphicalEntity{
+	constructor(x,y,z){
+		super()
+		var loader = new THREE.TextureLoader()
+		loader.setCrossOrigin("use-credentials")
+
+		var pause = loader.load("assets/textures/" + "paused2.png")
+		var geometry = new THREE.PlaneGeometry( 40, 10 );
+		var material = new THREE.MeshBasicMaterial({shininess: 0, map: pause} );
+    material.transparent = true
+		var mesh = new THREE.Mesh( geometry, material )
+		this.add(mesh)
+		this.position.set(x,y,z)
+    this.rotation.x = 3*Math.PI/2
+    this.add(new THREE.AxisHelper(3))
 		scene.add(this)
 	}
 }

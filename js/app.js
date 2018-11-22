@@ -1,6 +1,7 @@
 /*global THREE, requestAnimationFrame, console*/
 var controls;
 var camera, scene, renderer;
+var pause_camera;
 var num_balls = 10;
 var scaling = 50;
 var delta = 1;
@@ -22,7 +23,7 @@ function createScene() {
 
     addObject(new ChessBoard(0,0,0), "board");
     addObject(new Ball(0,2,0), "ball");
-	addObject(new RubikCube(0,2.5,0), "rubixcube");
+    addObject(new RubikCube(0,2.5,0), "rubixcube");
 
 
     addObject(new BoardLight( 2*Math.sqrt(2)*3, 1.6, 2*Math.sqrt(2)*3), "boardLight");
@@ -116,27 +117,29 @@ function createOrbitControls(){
   controls.autoRotateSpeed = 3
   controls.autoRotate = true
 }
-
+/**
+ * creates the camera and pause title
+ * they are located around (0,1000,0) in order not to interfere with the rest
+ * of the scene
+ */
 function pauseMenu(){
-	var hudCanvas = document.createElement('canvas');
-	hudCanvas.width = window.innerWidth;
-	hudCanvas.height = window.innerHeight;
-	var hudBitmap = hudCanvas.getContext('2d');
-	hudBitmap.font = "40px Arial";
-	hudBitmap.textAlign = 'center';
-	hudBitmap.fillStyle = "rgba(100,255,255)";
-	hudBitmap.fillText('Pause', window.innerWidth / 2, window.innerHeight / 2);
-	
-	var hudTexture = new THREE.Texture(hudCanvas)
-	hudTexture.needsUpdate = true;
-	var material = new THREE.MeshBasicMaterial( {map: hudTexture } );
-	material.transparent = true;
-	
-	var planeGeometry = new THREE.PlaneGeometry( window.innerWidth /4, window.innerHeight/4 );
-	plane = new THREE.Mesh( planeGeometry, material );
-	camera.add(plane);
-	plane.position.set(0,0,-40);
-	plane.visible = false;
+  // pause title
+  addObject(new PauseScreen(0,999,0), "pausescreen");
+
+  // pause OrthographicCamera
+  pause_camera = new THREE.OrthographicCamera(
+    window.innerWidth / - 2, window.innerWidth / 2,
+    window.innerHeight / 2, window.innerHeight / - 2,
+    0, 5 ); // very short far in order not to render anything else in the scene
+  pause_camera.isPerspectiveCamera = false
+
+  pause_camera.zoom = 10;
+  pause_camera.updateProjectionMatrix(); // update the zoom level
+
+  pause_camera.position.set(0,1000,0)
+  pause_camera.lookAt(scene.position);
+
+
 }
 
 function onKeyUp(e) {
@@ -197,8 +200,18 @@ function onKeyDown(e) {
 
 function render() {
     'use strict';
+    renderer.autoClear = false
+    renderer.clear(true, true, true)
 
+    renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
     renderer.render(scene, camera);
+
+    if (pause){
+      renderer.clearDepth(); // clear the depth buffer
+
+      renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
+      renderer.render(scene, pause_camera);
+    }
 }
 
 function init() {
@@ -213,16 +226,15 @@ function init() {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
     window.addEventListener("resize", onResize);
-	
+
 }
 
 function createiInit(){
 	createScene();
-    createCamera();
-    createOrbitControls();
+  createCamera();
+  createOrbitControls();
 	pauseMenu();
-
-    render();
+  render();
 }
 
 function animate() {
