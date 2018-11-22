@@ -47,26 +47,34 @@ class ChessBoard extends GraphicalEntity {
     var loader = new THREE.TextureLoader()
     loader.setCrossOrigin("use-credentials")
 
+    var texture_bottom = loader.load("assets/textures/" + "wood.jpg")
+    texture_bottom.wrapT = THREE.RepeatWrapping;
+    texture_bottom.repeat.set( 1, 1 );
+
+    var texture = loader.load("assets/textures/" + "wood.jpg")
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 0.1 );
+
     var geometry = new THREE.BoxGeometry( 20, 1, 20 );
     var boardMaterialsP =
     [
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
       new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "board.png"), side: THREE.FrontSide} ),
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} )
+      new THREE.MeshPhongMaterial( {shininess: 0, map: texture_bottom, side: THREE.FrontSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} )
 
     ];
 
     var boardMaterialsB =
     [
-      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
-      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
+      new THREE.MeshBasicMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
+      new THREE.MeshBasicMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
       new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "board.png"), side: THREE.FrontSide} ),
-      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
-      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} ),
-      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "wood.jpg"), side: THREE.FrontSide} )
+      new THREE.MeshBasicMaterial( {shininess: 0, map: texture_bottom, side: THREE.FrontSide} ),
+      new THREE.MeshBasicMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
+      new THREE.MeshBasicMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} )
 
     ];
 
