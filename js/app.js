@@ -190,12 +190,14 @@ function onKeyDown(e) {
 
 function render() {
     'use strict';
-    renderer.autoClear = false
     renderer.clear(true, true, true)
 
     renderer.render(scene, camera);
 
     if (pause){
+      // clear zbuffer
+      renderer.clear(false, true, false)
+
       renderer.render(scene, pause_camera);
     }
 }
@@ -204,6 +206,8 @@ function init() {
     'use strict';
     renderer = new THREE.WebGLRenderer({antialias: true});
 
+    renderer.autoClear = false
+    renderer.shadowMapEnabled = true;
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 

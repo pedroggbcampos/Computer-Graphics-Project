@@ -43,15 +43,16 @@ class GraphicalEntity extends THREE.Object3D {
 class ChessBoard extends GraphicalEntity {
   constructor(x,y,z){
     super()
+    this.receiveShadow = true;
 
     var loader = new THREE.TextureLoader()
-    loader.setCrossOrigin("use-credentials")
+    loader.setPath("assets/textures/")
 
-    var texture_bottom = loader.load("assets/textures/" + "wood.jpg")
+    var texture_bottom = loader.load("wood.jpg")
     texture_bottom.wrapT = THREE.RepeatWrapping;
     texture_bottom.repeat.set( 1, 1 );
 
-    var texture = loader.load("assets/textures/" + "wood.jpg")
+    var texture = loader.load("wood.jpg")
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set( 1, 0.1 );
 
@@ -60,7 +61,7 @@ class ChessBoard extends GraphicalEntity {
     [
       new THREE.MeshPhongMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
       new THREE.MeshPhongMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
-      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("assets/textures/" + "board.png"), side: THREE.FrontSide} ),
+      new THREE.MeshPhongMaterial( {shininess: 0, map: loader.load("board.png"), side: THREE.FrontSide} ),
       new THREE.MeshPhongMaterial( {shininess: 0, map: texture_bottom, side: THREE.FrontSide} ),
       new THREE.MeshPhongMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
       new THREE.MeshPhongMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} )
@@ -71,7 +72,7 @@ class ChessBoard extends GraphicalEntity {
     [
       new THREE.MeshBasicMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
       new THREE.MeshBasicMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
-      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("assets/textures/" + "board.png"), side: THREE.FrontSide} ),
+      new THREE.MeshBasicMaterial( {shininess: 0, map: loader.load("board.png"), side: THREE.FrontSide} ),
       new THREE.MeshBasicMaterial( {shininess: 0, map: texture_bottom, side: THREE.FrontSide} ),
       new THREE.MeshBasicMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} ),
       new THREE.MeshBasicMaterial( {shininess: 0, map: texture, side: THREE.FrontSide} )
@@ -95,6 +96,8 @@ class Ball extends GraphicalEntity {
     this.userData.current_velocity = 0
     this.userData.max_velocity = 6
     this.userData.acceleration = 0
+    this.castShadow = true;
+
     var loader = new THREE.TextureLoader()
     loader.setPath("assets/textures/")
     var texture = loader.load("ball14.jpg")
@@ -176,6 +179,7 @@ class BoardLight extends GraphicalEntity {
     //this.add(new THREE.AxisHelper(3))
     var light = new THREE.PointLight( 0xf4fcba, 1.5, 100, 1 );
     this.light = light
+    this.light.castShadow = true;
     this.add(light)
     this.position.set(x,y,z)
     this.userData.sphere = new THREE.SphereGeometry(10);
@@ -205,6 +209,7 @@ class DirectionalLight extends GraphicalEntity {
     super()
     this.intensity = intensity
     this.directionalLight = new THREE.DirectionalLight( 0xffffff, intensity );
+    this.directionalLight.castShadow = true;
     this.add(this.directionalLight);
     this.position.set(x ,y, z);
 
@@ -261,6 +266,7 @@ class RubikCube extends GraphicalEntity{
 		super()
 		var loader = new THREE.TextureLoader()
 		loader.setPath("assets/textures/")
+    this.castShadow = true;
 
     var face_materialsP = []
     for (var i=1; i<= 6; i++){
